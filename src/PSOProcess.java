@@ -10,8 +10,11 @@ public class PSOProcess {
     private int globalBestIndex;
     private double globalFitness=4;
     private double constriction = 0.72984;
+    private int iterations = 1;
 
-    public PSOProcess() {}
+    public PSOProcess(int i) {
+        iterations = i;
+    }
 
     private void initialise() {
         for(int i=0; i<swarm.capacity(); i++)
@@ -45,7 +48,7 @@ public class PSOProcess {
         double c2 = 2.05;
         this.initialise();
 
-        for (int j=0; j<1000; j++)
+        for (int j=0; j<iterations; j++)
         {
             for(int i=0; i<swarm.capacity(); i++)
             {

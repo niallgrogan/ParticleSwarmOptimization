@@ -13,18 +13,19 @@ public class FastScatterPlotDemo extends ApplicationFrame {
     private static final int COUNT = 50;
 
     /** The data. */
-    private float[][] data = new float[2][COUNT];
+    public float[][] data = new float[2][COUNT];
+    static FastScatterPlot plot;
 
 
     public FastScatterPlotDemo(final String title) {
 
         super(title);
-        populateData();
+        populateData(0);
         final NumberAxis domainAxis = new NumberAxis("X");
-        domainAxis.setAutoRangeIncludesZero(true);
+        domainAxis.setRange(-2,2);
         final NumberAxis rangeAxis = new NumberAxis("Y");
-        rangeAxis.setAutoRangeIncludesZero(true);
-        final FastScatterPlot plot = new FastScatterPlot(this.data, domainAxis, rangeAxis);
+        rangeAxis.setRange(-2, 2);
+        plot = new FastScatterPlot(this.data, domainAxis, rangeAxis);
         final JFreeChart chart = new JFreeChart("PSO Plot", plot);
 
         // force aliasing of the rendered content..
@@ -41,16 +42,15 @@ public class FastScatterPlotDemo extends ApplicationFrame {
         panel.setMaximumDrawWidth(2000);
 
         setContentPane(panel);
-
     }
 
 
     /**
      * Populates the data array with random values.
      */
-    private void populateData() {
+    public void populateData(int mul) {
 
-        PSOProcess p = new PSOProcess();
+        PSOProcess p = new PSOProcess(mul);
         p.execute();
         for(int i=0; i<p.swarm.capacity(); i++) {
             this.data[0][i] = (float)p.swarm.elementAt(i).getP().getX();
@@ -71,6 +71,16 @@ public class FastScatterPlotDemo extends ApplicationFrame {
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setVisible(true);
 
-    }
+        for(int i=0; i<100; i++)
+        {
+            try {
+                Thread.sleep(100);                 //1000 milliseconds is one second.
+            } catch(InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
 
+            demo.populateData(i);
+            plot.setData(demo.data);
+        }
+    }
 }
