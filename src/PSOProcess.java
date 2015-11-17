@@ -6,22 +6,44 @@ import java.util.Vector;
 public class PSOProcess {
 
     Vector<Particle> swarm = new Vector<Particle>(50);
+    Vector<Position> bestPositions = new Vector<Position>(50);
+    int globalBestIndex;
+    double fitness=0;
 
     public PSOProcess() {}
 
     private void initialise() {
-        for(int i=0; i<50; i++)
+        for(int i=0; i<swarm.capacity(); i++)
         {
-            swarm.add(new Particle());
+            Particle p = new Particle();
+            swarm.add(p);
+            bestPositions.add(p.getP());
+        }
+        findGBest();
+    }
+
+    private void findGBest() {
+        for(int i=0; i<swarm.capacity(); i++)
+        {
+            if(swarm.elementAt(i).getP().getX() > fitness)
+            {
+                fitness = swarm.elementAt(i).getP().getX();
+                globalBestIndex = i;
+            }
         }
     }
 
     public void execute() {
         this.initialise();
+        for(int i=0; i<swarm.capacity(); i++)
+        {
+            System.out.print(swarm.elementAt(i).getP().getX()+"["+i+"],\n");
+        }
+        System.out.println(globalBestIndex);
+
+
         Particle p = new Particle();
         Particle q = new Particle();
-
-
         double newPosX, newPosY, newVelX, newVelY;
         double r1,r2,c1,c2;
         r1 = Math.random();
