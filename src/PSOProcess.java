@@ -46,7 +46,7 @@ public class PSOProcess {
     public void execute() {
         this.initialise();
 
-        for (int j=0; j<100; j++) {
+        for (int j=0; j<1000; j++) {
             for(int i=0; i<swarm.capacity(); i++)
             {
                 r1 = Math.random();
