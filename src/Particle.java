@@ -17,7 +17,7 @@ public class Particle {
     private void calculateFitness() {
         double x = p.getX();
         double y = p.getY();
-        fitness = -(x*x + y*y)+4;
+        fitness = x+y;
     }
 
     public double getFitness() {

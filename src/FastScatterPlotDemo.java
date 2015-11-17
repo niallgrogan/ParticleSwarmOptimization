@@ -56,6 +56,7 @@ public class FastScatterPlotDemo extends ApplicationFrame {
             this.data[0][i] = (float)p.swarm.elementAt(i).getP().getX();
             this.data[1][i] = (float)p.swarm.elementAt(i).getP().getY();
         }
+
     }
 
     /**
