@@ -8,7 +8,8 @@ public class PSOProcess {
     Vector<Particle> swarm = new Vector<Particle>(50);
     private Position[] bestPositions = new Position[50];
     private int globalBestIndex;
-    private double globalFitness=0;
+    private double globalFitness=4;
+    private double constriction = 0.72984;
 
     public PSOProcess() {}
 
@@ -25,25 +26,17 @@ public class PSOProcess {
     private void findGBest() {
         for(int i=0; i<bestPositions.length; i++)
         {
-            if(findFit(bestPositions[i]) > globalFitness)
+            double bestFitness = evaluateFit(bestPositions[i].getX(),bestPositions[i].getY());
+            if(bestFitness < globalFitness)
             {
-                globalFitness = findFit(bestPositions[i]);
+                globalFitness = bestFitness;
                 globalBestIndex = i;
             }
         }
     }
 
-    //Not sustainable work-around
-    private double findFit(Position p)
-    {
-        double x = p.getX();
-        double y = p.getY();
-        double fitness = -1*((x*x)+(y*y))+4;
-        return fitness;
-    }
-
     private double evaluateFit(double x, double y) {
-        double fitness = -1*((x*x)+(y*y))+4;
+        double fitness = 0.26*(x*x + y*y) - 0.48*x*y;
         return fitness;
     }
 
@@ -67,34 +60,27 @@ public class PSOProcess {
                 double gbestX = bestPositions[globalBestIndex].getX();
                 double gbestY = bestPositions[globalBestIndex].getY();
 
-                //PSO Equations
-                double newVelX = p.getV().getX() + r1*c1*(pbestX - p.getP().getX()) + r2*c2*(gbestX - p.getP().getX());
-                double newVelY = p.getV().getY() + r1*c1*(pbestY - p.getP().getY()) + r2*c2*(gbestY - p.getP().getY());
-
-                //if(newVelX > 2.5 | newVelX < -2.5) {newVelX = 2.5;}
-                //if(newVelY > 2.5 | newVelY < -2.5) {newVelY = 2.5;}
+                //PSO Equations with Constriction Factor
+                double newVelX = constriction*(p.getV().getX() + r1*(pbestX - p.getP().getX()) + r2*(gbestX - p.getP().getX()));
+                double newVelY = constriction*(p.getV().getY() + r1*(pbestY - p.getP().getY()) + r2*(gbestY - p.getP().getY()));
 
                 double newPosX = p.getP().getX() + newVelX;
                 double newPosY = p.getP().getY() + newVelY;
-
-                //if(newPosX > 10 | newPosY < -10) {newPosX = Math.random();}
-                //if(newPosY > 10 | newPosY < -10) {newPosY = Math.random();}
 
                 //Setting new particle velocity and position
                 p.setP(newPosX, newPosY);
                 p.setV(newVelX, newVelY);
 
-                if(evaluateFit(newPosX, newPosY) > evaluateFit(pbestX, pbestY))
+                if(evaluateFit(newPosX, newPosY) < evaluateFit(pbestX, pbestY))
                 {
                     bestPositions[i] = new Position(newPosX, newPosY);
-                    //Global best will only change when individual best changes too???
                     findGBest();
                 }
             }
         }
         System.out.println("***");
         for(int k=0; k<bestPositions.length; k++) {
-            System.out.print(findFit(bestPositions[k]) + "[" + k + "],\n");
+            System.out.print(evaluateFit(bestPositions[k].getX(), bestPositions[k].getY()) + "[" + k + "],\n");
         }
         findGBest();
         System.out.println(globalBestIndex);
