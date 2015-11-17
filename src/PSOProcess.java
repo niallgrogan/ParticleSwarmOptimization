@@ -11,7 +11,7 @@ public class PSOProcess {
     double globalFitness=0;
     double newPosX, newPosY, newVelX, newVelY;
     double r1,r2;
-    double c1, c2 = 1.05;
+    double c1, c2 = 2.05;
     double pbestX, pbestY, gbestX, gbestY;
 
     public PSOProcess() {}
@@ -29,18 +29,24 @@ public class PSOProcess {
     private void findGBest() {
         for(int i=0; i<swarm.capacity(); i++)
         {
-            if(swarm.elementAt(i).getP().getX() > globalFitness)
+            if(swarm.elementAt(i).getFitness() > globalFitness)
             {
-                globalFitness = swarm.elementAt(i).getP().getX();
+                globalFitness = swarm.elementAt(i).getFitness();
                 globalBestIndex = i;
             }
         }
     }
 
+    //Not sustainable work-around
+    private double findFit(double x, double y)
+    {
+        return -(x*x + y*y)+4;
+    }
+
     public void execute() {
         this.initialise();
 
-        for (int j=0; j<10; j++) {
+        for (int j=0; j<100; j++) {
             for(int i=0; i<swarm.capacity(); i++)
             {
                 r1 = Math.random();
@@ -64,18 +70,18 @@ public class PSOProcess {
                 p.setP(newPosX,newPosY);
                 p.setV(newVelX, newVelY);
 
-                //updating pBest and gBest
-                //This should be evaluated in terms of fitness rather than position
-                if(newPosX > pbestX)
+                if(findFit(newPosX, newPosY) > findFit(pbestX, pbestY))
                 {
                     bestPositions.insertElementAt(p.getP(), i);
                     //Global best will only change when individual best changes too???
                     findGBest();
                 }
+
+
             }
         }
         for(int k=0; k<swarm.capacity(); k++) {
-            System.out.print(swarm.elementAt(k).getP().getX()+"["+k+"],\n");
+            System.out.print(swarm.elementAt(k).getP().getX()+"["+k+"],"+swarm.elementAt(k).getP().getX()+"["+k+"]\n");
         }
         System.out.println(globalBestIndex);
     }

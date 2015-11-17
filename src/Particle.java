@@ -10,8 +10,19 @@ public class Particle {
     public Particle()
     {
         //Initialise everything between 0 and 100
-        p = new Position(100*Math.random(), 100*Math.random());
-        v = new Velocity(100*Math.random(), 100*Math.random());
+        p = new Position(Math.random(), Math.random());
+        v = new Velocity(Math.random(), Math.random());
+    }
+
+    private void calculateFitness() {
+        double x = p.getX();
+        double y = p.getY();
+        fitness = -(x*x + y*y)+4;
+    }
+
+    public double getFitness() {
+        calculateFitness();
+        return fitness;
     }
 
     public void setP(double x, double y)
