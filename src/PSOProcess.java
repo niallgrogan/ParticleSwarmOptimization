@@ -21,7 +21,6 @@ public class PSOProcess implements Constants{
     private void initialise() {
         for(int i=0; i<swarm.capacity(); i++)
         {
-            //May want to introduce initialisation range here
             Particle p = new Particle(dimensions);
             swarm.add(p);
             bestPositions[i] = new Position(p.getP().getPos());
@@ -32,7 +31,7 @@ public class PSOProcess implements Constants{
     private void findGBest() {
         for(int i=0; i<bestPositions.length; i++)
         {
-            double bestFitness = evaluateFit(bestPositions[i].getX(),bestPositions[i].getY());
+            double bestFitness = evaluateFit(bestPositions[i].getPos());
             if(bestFitness < globalFitness)
             {
                 globalFitness = bestFitness;
@@ -41,11 +40,11 @@ public class PSOProcess implements Constants{
         }
     }
 
-    private double evaluateFit(double x, double y) {
+    private double evaluateFit(double[] p) {
         //Rosenbrock Function (a=1 and b=100) ???
         //Min = (n=2): f(1,1) = 0
         //Search -inf < x < inf, 1<i<n
-        double fitness = Math.pow((1-x),2) + 100*Math.pow((y-x*x),2);
+        double fitness = Math.pow((1-p[0]),2) + 100*Math.pow((p[1]-p[0]*p[0]),2);
         return fitness;
     }
 
@@ -66,6 +65,7 @@ public class PSOProcess implements Constants{
                 double[] gbest = bestPositions[globalBestIndex].getPos();
                 double[] newVel = new double[dimensions];
                 double[] newPos = new double[dimensions];
+                boolean insideBound = true;
 
                 //PSO Equations with Constriction Factor
                 for(int k=0; k<dimensions; k++)
@@ -77,17 +77,17 @@ public class PSOProcess implements Constants{
                     else if(newVel[k] > Vmax) {newVel[k] = Vmax;}
 
                     newPos[k] = p.getP().getPos()[k] + newVel[k];
+                    if(newPos[k] > upperBound | newPos[k] < lowerBound) {insideBound = false;}
                 }
 
                 //Setting new particle velocity and position
                 p.setP(newPos);
                 p.setV(newVel);
 
-                if(evaluateFit(newPosX, newPosY) < evaluateFit(pbestX, pbestY))
+                if(evaluateFit(newPos) < evaluateFit(pbest))
                 {
-                    if (newPosX > upperBound || newPosX < lowerBound || newPosY > upperBound || newPosY < lowerBound) {}
-                    else {
-                        bestPositions[i] = new Position(newPosX, newPosY);
+                    if (insideBound) {
+                        bestPositions[i] = new Position(newPos);
                         findGBest();
                     }
                 }
@@ -95,7 +95,7 @@ public class PSOProcess implements Constants{
         }
         System.out.println("***");
         for(int k=0; k<bestPositions.length; k++) {
-            System.out.print(evaluateFit(bestPositions[k].getX(), bestPositions[k].getY()) + "[" + k + "],\n");
+            System.out.print(evaluateFit(bestPositions[k].getPos()) + "[" + k + "],\n");
         }
         findGBest();
         System.out.println(globalBestIndex);

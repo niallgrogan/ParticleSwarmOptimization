@@ -53,8 +53,8 @@ public class FastScatterPlotDemo extends ApplicationFrame implements Constants {
         PSOProcess p = new PSOProcess(mul);
         p.execute();
         for(int i=0; i<p.swarm.capacity(); i++) {
-            this.data[0][i] = (float)p.swarm.elementAt(i).getP().getX();
-            this.data[1][i] = (float)p.swarm.elementAt(i).getP().getY();
+            this.data[0][i] = (float)p.swarm.elementAt(i).getP().getPos()[0];
+            this.data[1][i] = (float)p.swarm.elementAt(i).getP().getPos()[1];
         }
 
     }

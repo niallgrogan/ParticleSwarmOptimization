@@ -2,15 +2,14 @@
  * Created by Niall on 13/11/2015.
  */
 public class Particle implements Constants{
-    //Defined both as velocitites for simplicity atm
+
     private Position pos;
-    private double[] positions;
     private Velocity vel;
-    private double[] velocities;
-    private double fitness;
 
     public Particle(int dimension)
     {
+        double[] positions = new double[dimensions];
+        double[] velocities = new double[dimensions];
         for(int i=0; i<dimension; i++)
         {
             positions[i] = (initUpBound-initLowBound)*Math.random()+initLowBound;
@@ -22,15 +21,9 @@ public class Particle implements Constants{
 
     public void setP(double[] p) {pos.setPos(p);}
 
-    public Position getP()
-    {
-        return pos;
-    }
+    public Position getP() {return pos;}
 
     public void setV(double[] v) {vel.setVel(v);}
 
-    public Velocity getV()
-    {
-        return vel;
-    }
+    public Velocity getV() {return vel;}
 }
