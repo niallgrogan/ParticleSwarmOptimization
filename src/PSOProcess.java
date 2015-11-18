@@ -41,10 +41,12 @@ public class PSOProcess implements Constants{
     }
 
     private double evaluateFit(double[] p) {
-        //Rosenbrock Function (a=1 and b=100) ???
-        //Min = (n=2): f(1,1) = 0
-        //Search -inf < x < inf, 1<i<n
-        double fitness = Math.pow((1-p[0]),2) + 100*Math.pow((p[1]-p[0]*p[0]),2);
+        //Sphere function
+        double fitness = 0;
+        for (int i=0; i<dimensions; i++)
+        {
+            fitness = fitness + Math.pow(p[i],2);
+        }
         return fitness;
     }
 
@@ -98,7 +100,7 @@ public class PSOProcess implements Constants{
             System.out.print(evaluateFit(bestPositions[k].getPos()) + "[" + k + "],\n");
         }
         findGBest();
-        System.out.println(globalBestIndex);
+        System.out.println(bestPositions[globalBestIndex].toString());
         System.out.println(globalFitness);
     }
 }
