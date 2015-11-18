@@ -82,16 +82,9 @@ public class PSOProcess implements Constants{
                 p.setP(newPosX, newPosY);
                 p.setV(newVelX, newVelY);
 
-                if (newPosX > upperBound || newPosX < lowerBound) {}
-                else if (newPosY > upperBound || newPosY < lowerBound) {}
-                else {
-
-                }
-
                 if(evaluateFit(newPosX, newPosY) < evaluateFit(pbestX, pbestY))
                 {
-                    if (newPosX > upperBound || newPosX < lowerBound) {}
-                    else if (newPosY > upperBound || newPosY < lowerBound) {}
+                    if (newPosX > upperBound || newPosX < lowerBound || newPosY > upperBound || newPosY < lowerBound) {}
                     else {
                         bestPositions[i] = new Position(newPosX, newPosY);
                         findGBest();
