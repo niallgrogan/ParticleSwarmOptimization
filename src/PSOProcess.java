@@ -88,7 +88,6 @@ public class PSOProcess implements Constants{
 
                 }
 
-
                 if(evaluateFit(newPosX, newPosY) < evaluateFit(pbestX, pbestY))
                 {
                     if (newPosX > upperBound || newPosX < lowerBound) {}

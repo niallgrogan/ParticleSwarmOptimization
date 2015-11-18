@@ -10,7 +10,7 @@ import org.jfree.ui.RefineryUtilities;
 public class FastScatterPlotDemo extends ApplicationFrame implements Constants {
 
     /** A constant for the number of items in the sample dataset. */
-    private static final int COUNT = 50;
+    private static final int COUNT = swarmSize;
 
     /** The data. */
     public float[][] data = new float[2][COUNT];

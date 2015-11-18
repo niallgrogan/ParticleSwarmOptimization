@@ -8,6 +8,10 @@ public interface Constants {
     double c2 = 2.05;
     double constriction = 0.72984;
     double Vmax = 10000;
-    double upperBound = 5;
-    double lowerBound = -5;
+    int upperBound = 5;
+    int lowerBound = -5;
+    int initUpBoundX = 5;
+    int initLowBoundX = 4;
+    int initUpBoundY = 5;
+    int initLowBoundY = 4;
 }
