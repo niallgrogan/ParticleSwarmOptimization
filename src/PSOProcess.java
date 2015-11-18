@@ -39,7 +39,23 @@ public class PSOProcess {
     }
 
     private double evaluateFit(double x, double y) {
-        double fitness = 0.26*(x*x + y*y) - 0.48*x*y;
+        //Sphere Function (2D)
+        //double fitness = x*x + x*x;
+        //Rosenbrock Function (a=1 and b=100)
+        //double fitness = Math.pow((1-x),2) + 100*Math.pow((y-x*x),2);
+        //Griewank Function
+        //Not yet implemented
+        //Rastrigin Function (2D)
+        //double fitness = 10*2 + (x*x - 10*Math.cos(2*Math.PI*x)) + (x*x - 10*Math.cos(2*Math.PI*x));
+        //Not yet implemented
+        //Schaffer 2D
+        //double fitness = 0.5 + (Math.pow((Math.sin(x*x - y*y)),2) - 0.5)/Math.pow((1 + 0.001*(x*x + y*y)),2);
+        //Ackley's Function
+        double fitness = -20*Math.exp(-0.2*(Math.sqrt(0.5*(x*x + y*y)))) - Math.exp(0.5*(Math.cos(2*x*Math.PI)+Math.cos(2*y*Math.PI))) + Math.E + 20;
+        //Booths Function
+        //double fitness = Math.pow((x+2*y-7),2) + Math.pow((2*x+y-5),2);
+        //Matyas Function
+        //double fitness = 0.26*(x*x + y*y) - 0.48*x*y;
         return fitness;
     }
 
@@ -64,8 +80,8 @@ public class PSOProcess {
                 double gbestY = bestPositions[globalBestIndex].getY();
 
                 //PSO Equations with Constriction Factor
-                double newVelX = constriction*(p.getV().getX() + r1*(pbestX - p.getP().getX()) + r2*(gbestX - p.getP().getX()));
-                double newVelY = constriction*(p.getV().getY() + r1*(pbestY - p.getP().getY()) + r2*(gbestY - p.getP().getY()));
+                double newVelX = constriction*(p.getV().getX() + r1*c1*(pbestX - p.getP().getX()) + r2*c2*(gbestX - p.getP().getX()));
+                double newVelY = constriction*(p.getV().getY() + r1*c1*(pbestY - p.getP().getY()) + r2*c2*(gbestY - p.getP().getY()));
 
                 double newPosX = p.getP().getX() + newVelX;
                 double newPosY = p.getP().getY() + newVelY;

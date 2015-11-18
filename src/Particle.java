@@ -9,8 +9,8 @@ public class Particle {
 
     public Particle()
     {
-        //Initialise everything between 0 and 100
-        p = new Position(Math.random(), Math.random());
+        //Initialise everything between 0 and 1
+        p = new Position((4-2)*Math.random()+2, (4-2)*Math.random()+2);
         v = new Velocity(Math.random(), Math.random());
     }
 

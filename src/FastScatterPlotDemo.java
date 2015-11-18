@@ -22,9 +22,9 @@ public class FastScatterPlotDemo extends ApplicationFrame {
         super(title);
         populateData(0);
         final NumberAxis domainAxis = new NumberAxis("X");
-        domainAxis.setRange(-2,2);
+        domainAxis.setRange(-5,5);
         final NumberAxis rangeAxis = new NumberAxis("Y");
-        rangeAxis.setRange(-2, 2);
+        rangeAxis.setRange(-5, 5);
         plot = new FastScatterPlot(this.data, domainAxis, rangeAxis);
         final JFreeChart chart = new JFreeChart("PSO Plot", plot);
 
