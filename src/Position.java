@@ -3,31 +3,16 @@
  */
 public class Position {
 
-    private double X;
-    private double Y;
+    private double[] pos;
 
-    public Position(double x, double y) {
-        X = x;
-        Y = y;
+    public Position(double[] p) {
+        pos = p;
     }
 
-    public void setX(double x)
-    {
-        X = x;
-    }
+    public void setPos(double[] p) {pos = p;}
 
-    public void setY(double y)
+    public double[] getPos()
     {
-        Y = y;
-    }
-
-    public double getX()
-    {
-        return X;
-    }
-
-    public double getY()
-    {
-        return Y;
+        return pos;
     }
 }

@@ -22,9 +22,9 @@ public class PSOProcess implements Constants{
         for(int i=0; i<swarm.capacity(); i++)
         {
             //May want to introduce initialisation range here
-            Particle p = new Particle();
+            Particle p = new Particle(dimensions);
             swarm.add(p);
-            bestPositions[i] = new Position(p.getP().getX(), p.getP().getY());
+            bestPositions[i] = new Position(p.getP().getPos());
         }
         findGBest();
     }
@@ -62,25 +62,26 @@ public class PSOProcess implements Constants{
                 Particle p = swarm.elementAt(i);
 
                 //Getting our pBest and gBest
-                double pbestX = bestPositions[i].getX();
-                double pbestY = bestPositions[i].getY();
-                double gbestX = bestPositions[globalBestIndex].getX();
-                double gbestY = bestPositions[globalBestIndex].getY();
+                double[] pbest = bestPositions[i].getPos();
+                double[] gbest = bestPositions[globalBestIndex].getPos();
+                double[] newVel = new double[dimensions];
+                double[] newPos = new double[dimensions];
 
                 //PSO Equations with Constriction Factor
-                double newVelX = constriction*(p.getV().getX() + r1*c1*(pbestX - p.getP().getX()) + r2*c2*(gbestX - p.getP().getX()));
-                double newVelY = constriction*(p.getV().getY() + r1*c1*(pbestY - p.getP().getY()) + r2*c2*(gbestY - p.getP().getY()));
+                for(int k=0; k<dimensions; k++)
+                {
+                    newVel[k] = constriction*(p.getV().getVel()[k] + r1*c1*(pbest[k] - p.getP().getPos()[k]) + r2*c2*(gbest[k] - p.getP().getPos()[k]));
 
-                //Limiting velocity
-                if(newVelX > Vmax) {newVelX = Vmax;}
-                else if(newVelY > Vmax) {newVelY = Vmax;}
+                    //Limiting velocity
+                    if(newVel[k] > Vmax) {newVel[k] = Vmax;}
+                    else if(newVel[k] > Vmax) {newVel[k] = Vmax;}
 
-                double newPosX = p.getP().getX() + newVelX;
-                double newPosY = p.getP().getY() + newVelY;
+                    newPos[k] = p.getP().getPos()[k] + newVel[k];
+                }
 
                 //Setting new particle velocity and position
-                p.setP(newPosX, newPosY);
-                p.setV(newVelX, newVelY);
+                p.setP(newPos);
+                p.setV(newVel);
 
                 if(evaluateFit(newPosX, newPosY) < evaluateFit(pbestX, pbestY))
                 {

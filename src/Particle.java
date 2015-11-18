@@ -3,46 +3,34 @@
  */
 public class Particle implements Constants{
     //Defined both as velocitites for simplicity atm
-    private Position p;
-    private Velocity v;
+    private Position pos;
+    private double[] positions;
+    private Velocity vel;
+    private double[] velocities;
     private double fitness;
 
-    public Particle()
+    public Particle(int dimension)
     {
-        p = new Position((initUpBoundX-initLowBoundX)*Math.random()+initLowBoundX, (initUpBoundY-initLowBoundY)*Math.random()+initLowBoundY);
-        v = new Velocity(Math.random(), Math.random());
+        for(int i=0; i<dimension; i++)
+        {
+            positions[i] = (initUpBound-initLowBound)*Math.random()+initLowBound;
+            velocities[i] = Math.random();
+        }
+        pos = new Position(positions);
+        vel = new Velocity(velocities);
     }
 
-    private void calculateFitness() {
-        double x = p.getX();
-        double y = p.getY();
-        fitness = x+y;
-    }
-
-    public double getFitness() {
-        calculateFitness();
-        return fitness;
-    }
-
-    public void setP(double x, double y)
-    {
-        p.setX(x);
-        p.setY(y);
-    }
+    public void setP(double[] p) {pos.setPos(p);}
 
     public Position getP()
     {
-        return p;
+        return pos;
     }
 
-    public void setV(double x, double y)
-    {
-        v.setX(x);
-        v.setY(y);
-    }
+    public void setV(double[] v) {vel.setVel(v);}
 
     public Velocity getV()
     {
-        return v;
+        return vel;
     }
 }

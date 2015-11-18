@@ -2,31 +2,16 @@
  * Created by Niall on 17/11/2015.
  */
 public class Velocity {
-    private double X;
-    private double Y;
+    private double[] vel;
 
-    public Velocity(double x, double y) {
-        X = x;
-        Y = y;
+    public Velocity(double[] v) {
+        vel = v;
     }
 
-    public void setX(double x)
-    {
-        X = x;
-    }
+    public void setVel(double[] v) {vel = v;}
 
-    public void setY(double y)
+    public double[] getVel()
     {
-        Y = y;
-    }
-
-    public double getX()
-    {
-        return X;
-    }
-
-    public double getY()
-    {
-        return Y;
+        return vel;
     }
 }
