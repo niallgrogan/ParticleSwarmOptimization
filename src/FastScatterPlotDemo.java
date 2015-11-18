@@ -7,7 +7,7 @@ import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 
 
-public class FastScatterPlotDemo extends ApplicationFrame {
+public class FastScatterPlotDemo extends ApplicationFrame implements Constants {
 
     /** A constant for the number of items in the sample dataset. */
     private static final int COUNT = 50;
@@ -22,9 +22,9 @@ public class FastScatterPlotDemo extends ApplicationFrame {
         super(title);
         populateData(0);
         final NumberAxis domainAxis = new NumberAxis("X");
-        domainAxis.setRange(-5,5);
+        domainAxis.setRange(lowerBound,upperBound);
         final NumberAxis rangeAxis = new NumberAxis("Y");
-        rangeAxis.setRange(-5, 5);
+        rangeAxis.setRange(lowerBound, upperBound);
         plot = new FastScatterPlot(this.data, domainAxis, rangeAxis);
         final JFreeChart chart = new JFreeChart("PSO Plot", plot);
 
