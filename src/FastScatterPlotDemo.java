@@ -20,7 +20,7 @@ public class FastScatterPlotDemo extends ApplicationFrame implements Constants {
     public FastScatterPlotDemo(final String title) {
 
         super(title);
-        populateData(0);
+        populateData(10000);
         final NumberAxis domainAxis = new NumberAxis("X");
         domainAxis.setRange(lowerBound,upperBound);
         final NumberAxis rangeAxis = new NumberAxis("Y");

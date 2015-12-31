@@ -1,15 +1,13 @@
+import java.util.Collections;
 import java.util.Vector;
 
-/**
- * Created by Niall on 17/11/2015.
- */
 public class PSOProcess implements Constants{
 
     Vector<Particle> swarm = new Vector<Particle>(swarmSize);
     private Position[] bestPositions = new Position[swarmSize];
+    private double[] bestFitnesses = new double[swarmSize];
     private int globalBestIndex;
     //Not good to have this here
-    private double globalFitness=4;
     private int iterations = numIterations;
 
     public PSOProcess() {}
@@ -31,13 +29,24 @@ public class PSOProcess implements Constants{
     private void findGBest() {
         for(int i=0; i<bestPositions.length; i++)
         {
-            double bestFitness = evaluateFit(bestPositions[i].getPos());
-            if(bestFitness < globalFitness)
+            bestFitnesses[i] = evaluateFit(bestPositions[i].getPos());
+        }
+        globalBestIndex = getMinPos(bestFitnesses);
+    }
+
+    private int getMinPos(double[] fitnesses)
+    {
+        int pos = 0;
+        double minVal = fitnesses[0];
+        for(int i=0; i<fitnesses.length; i++)
+        {
+            if(fitnesses[i] < minVal)
             {
-                globalFitness = bestFitness;
-                globalBestIndex = i;
+                pos = i;
+                minVal = fitnesses[i];
             }
         }
+        return pos;
     }
 
     private double evaluateFit(double[] p) {
@@ -101,6 +110,5 @@ public class PSOProcess implements Constants{
         }
         findGBest();
         System.out.println(bestPositions[globalBestIndex].toString());
-        System.out.println(globalFitness);
     }
 }

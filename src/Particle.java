@@ -12,8 +12,10 @@ public class Particle implements Constants{
         double[] velocities = new double[dimensions];
         for(int i=0; i<dimension; i++)
         {
+            //Set randomly inside problem bounds
             positions[i] = (upperBound-lowerBound)*Math.random()+lowerBound;
-            velocities[i] = Math.random();
+            //Set using half diff method
+            velocities[i] = (((upperBound-lowerBound)*Math.random()+lowerBound) - positions[i])/2;
         }
         pos = new Position(positions);
         vel = new Velocity(velocities);
