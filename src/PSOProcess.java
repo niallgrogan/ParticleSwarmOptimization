@@ -7,7 +7,6 @@ public class PSOProcess implements Constants{
     private Position[] bestPositions = new Position[swarmSize];
     private double[] bestFitnesses = new double[swarmSize];
     private int globalBestIndex;
-    //Not good to have this here
     private int iterations = numIterations;
 
     public PSOProcess() {}
@@ -85,7 +84,6 @@ public class PSOProcess implements Constants{
 
                     //Limiting velocity
                     if(newVel[k] > Vmax) {newVel[k] = Vmax;}
-                    else if(newVel[k] > Vmax) {newVel[k] = Vmax;}
 
                     newPos[k] = p.getP().getPos()[k] + newVel[k];
                     if(newPos[k] > upperBound | newPos[k] < lowerBound) {insideBound = false;}
@@ -99,10 +97,11 @@ public class PSOProcess implements Constants{
                 {
                     if (insideBound) {
                         bestPositions[i] = new Position(newPos);
-                        findGBest();
                     }
                 }
             }
+            //Update global best
+            findGBest();
         }
         System.out.println("***");
         for(int k=0; k<bestPositions.length; k++) {
