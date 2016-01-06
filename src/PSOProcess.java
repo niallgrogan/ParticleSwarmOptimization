@@ -4,7 +4,7 @@ import java.util.Vector;
 public class PSOProcess implements Constants{
 
     Vector<Particle> swarm = new Vector<Particle>(swarmSize);
-    private Position[] bestPositions = new Position[swarmSize];
+    private double[][] bestPositions = new double[swarmSize][dimensions];
     private double[] bestFitnesses = new double[swarmSize];
     private int globalBestIndex;
     private int iterations = numIterations;
@@ -20,7 +20,7 @@ public class PSOProcess implements Constants{
         {
             Particle p = new Particle(dimensions);
             swarm.add(p);
-            bestPositions[i] = new Position(p.getP().getPos());
+            bestPositions[i] = p.getP();
         }
         findGBest();
     }
@@ -28,7 +28,7 @@ public class PSOProcess implements Constants{
     private void findGBest() {
         for(int i=0; i<bestPositions.length; i++)
         {
-            bestFitnesses[i] = evaluateFit(bestPositions[i].getPos());
+            bestFitnesses[i] = evaluateFit(bestPositions[i]);
         }
         globalBestIndex = getMinPos(bestFitnesses);
     }
@@ -71,8 +71,8 @@ public class PSOProcess implements Constants{
                 Particle p = swarm.elementAt(i);
 
                 //Getting our pBest and gBest
-                double[] pbest = bestPositions[i].getPos();
-                double[] gbest = bestPositions[globalBestIndex].getPos();
+                double[] pbest = bestPositions[i];
+                double[] gbest = bestPositions[globalBestIndex];
                 double[] newVel = new double[dimensions];
                 double[] newPos = new double[dimensions];
                 boolean insideBound = true;
@@ -80,12 +80,12 @@ public class PSOProcess implements Constants{
                 //PSO Equations with Constriction Factor
                 for(int k=0; k<dimensions; k++)
                 {
-                    newVel[k] = constriction*(p.getV().getVel()[k] + r1*c1*(pbest[k] - p.getP().getPos()[k]) + r2*c2*(gbest[k] - p.getP().getPos()[k]));
+                    newVel[k] = constriction*(p.getV()[k] + r1*c1*(pbest[k] - p.getP()[k]) + r2*c2*(gbest[k] - p.getP()[k]));
 
                     //Limiting velocity
                     if(newVel[k] > Vmax) {newVel[k] = Vmax;}
 
-                    newPos[k] = p.getP().getPos()[k] + newVel[k];
+                    newPos[k] = p.getP()[k] + newVel[k];
                     if(newPos[k] > upperBound | newPos[k] < lowerBound) {insideBound = false;}
                 }
 
@@ -96,7 +96,7 @@ public class PSOProcess implements Constants{
                 if(evaluateFit(newPos) < evaluateFit(pbest))
                 {
                     if (insideBound) {
-                        bestPositions[i] = new Position(newPos);
+                        bestPositions[i] = newPos;
                     }
                 }
             }
@@ -105,7 +105,7 @@ public class PSOProcess implements Constants{
         }
         System.out.println("***");
         for(int k=0; k<bestPositions.length; k++) {
-            System.out.print(evaluateFit(bestPositions[k].getPos()) + "[" + k + "],\n");
+            System.out.print(evaluateFit(bestPositions[k]) + "[" + k + "],\n");
         }
         findGBest();
         System.out.println(bestPositions[globalBestIndex].toString());
