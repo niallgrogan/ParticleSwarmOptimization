@@ -2,7 +2,7 @@
  * Created by Niall on 18/11/2015.
  */
 public interface Constants {
-    int numIterations = 10000;
+    int numIterations = 2000;
     int swarmSize = 50;
     int dimensions = 30;
     double c1 = 2.05;

@@ -10,7 +10,7 @@ public class Functions {
     //Rosenbrock Function (a=1 and b=100) ???
     //Min = (n=2): f(1,1) = 0
     //Search -inf < x < inf, 1<i<n
-    //double fitness = Math.pow((1-p[0]),2) + 100*Math.pow((p[1]-p[0]*p[0]),2);
+    //double fitness = (100*Math.pow(p[i+1] - Math.pow(p[i],2)));
 
     //Griewank Function
     //Min = f(x*) = 0 for x*=(0,....0)
