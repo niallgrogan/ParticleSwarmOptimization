@@ -44,12 +44,11 @@ public class PSOProcess implements Constants{
     }
 
     private double evaluateFit(double[] p) {
-        //Sphere function
-        double fitness = 0;
-        for (int i=0; i<dimensions; i++)
-        {
-            fitness = fitness + Math.pow(p[i],2);
-        }
+        //Schaffer(2D) Function
+        double fitness = 0.0;
+        double numer = Math.pow(Math.sin(p[0]*p[0] - p[1]*p[1]),2)-0.5;
+        double denom = Math.pow((1.0 + 0.001*(p[0]*p[0] + p[1]*p[1])),2);
+        fitness = 0.5 + (numer/denom);
         return fitness;
     }
 
@@ -74,6 +73,7 @@ public class PSOProcess implements Constants{
                     newVel[k] = constriction*(p.getV()[k] + new Random().nextDouble()*c1*(pbest[k] - p.getP()[k]) + new Random().nextDouble()*c2*(gbest[k] - p.getP()[k]));
                     //Limiting velocity
                     if(newVel[k] > Vmax) {newVel[k] = Vmax;}
+                    else if(newVel[k] < -Vmax) {newVel[k] = -Vmax;}
 
                     newPos[k] = p.getP()[k] + newVel[k];
                     //Implementing a reflecting boundary
@@ -96,6 +96,7 @@ public class PSOProcess implements Constants{
                 }
                 findGBest();
             }
+            System.out.println(evaluateFit(bestPositions[globalBestIndex]));
         }
         System.out.println(evaluateFit(bestPositions[globalBestIndex]));
     }
