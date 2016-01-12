@@ -1,13 +1,11 @@
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Random;
 
 public abstract class PSOProcess implements Constants{
 
     Particle[] swarm = new Particle[swarmSize];
-    private double[][] bestPositions = new double[swarmSize][dimensions];
-    private double[] bestFitnesses = new double[swarmSize];
+    public double[][] bestPositions = new double[swarmSize][dimensions];
+    public double[] bestFitnesses = new double[swarmSize];
+    public int localBestIndex;
     private int globalBestIndex;
     private double[] globalFitnessArray = new double[numIterations];
 
@@ -21,50 +19,43 @@ public abstract class PSOProcess implements Constants{
             bestPositions[i] = p.getP();
         }
     }
-//
-//    private void findGBest() {
-//        for(int i=0; i<bestPositions.length; i++)
-//        {
-//            bestFitnesses[i] = evaluateFit(bestPositions[i]);
-//        }
-//        globalBestIndex = getMinPos(bestFitnesses);
-//    }
-//
-//    private int getMinPos(double[] fitnesses)
-//    {
-//        int pos = 0;
-//        double minVal = fitnesses[0];
-//        for(int i=0; i<fitnesses.length; i++)
-//        {
-//            if(fitnesses[i] < minVal)
-//            {
-//                pos = i;
-//                minVal = fitnesses[i];
-//            }
-//        }
-//        return pos;
-//    }
 
-    private double evaluateFit(double[] p) {
-        //Griewank(10D) Function
-        double fitness = 0.0;
-        double sum = 0.0;
-        //Need to start product as 1
-        double product = 1.0;
+    private void findGBest() {
+        for(int i=0; i<bestPositions.length; i++)
+        {
+            bestFitnesses[i] = evaluateFit(bestPositions[i]);
+        }
+        globalBestIndex = getMinPos(bestFitnesses);
+    }
+
+    public int getMinPos(double[] fitnesses)
+    {
+        int pos = 0;
+        double minVal = fitnesses[0];
+        for(int i=0; i<fitnesses.length; i++)
+        {
+            if(fitnesses[i] < minVal)
+            {
+                pos = i;
+                minVal = fitnesses[i];
+            }
+        }
+        return pos;
+    }
+
+    public double evaluateFit(double[] p) {
+        //Sphere function
+        double fitness = 0;
         for (int i=0; i<dimensions; i++)
         {
-            sum += ((p[i]*p[i])/4000.0);
-            //Note the plus one
-            product *= Math.cos(p[i]/Math.sqrt(i+1));
+            fitness = fitness + Math.pow(p[i],2);
         }
-        //May be a problem dividing double by int
-        fitness = (sum - product + 1.0);
         return fitness;
     }
 
-    public abstract double[] findLocalGBest(Particle p);
+    public abstract double[] findLocalGBest(int particleNumber);
 
-    public void execute() {
+    public double[] execute() {
 
         for (int j=0; j<numIterations; j++)
         {
@@ -75,7 +66,7 @@ public abstract class PSOProcess implements Constants{
 
                 //Getting our pBest and gBest
                 double[] pbest = bestPositions[i];
-                double[] gbest = findLocalGBest(swarm[i]);
+                double[] gbest = findLocalGBest(i);
                 double[] newVel = new double[dimensions];
                 double[] newPos = new double[dimensions];
 
@@ -107,25 +98,10 @@ public abstract class PSOProcess implements Constants{
                     bestPositions[i] = newPos;
                 }
             }
+            findGBest();
             globalFitnessArray[j] = evaluateFit(bestPositions[globalBestIndex]);
         }
-        toCSVFile(globalFitnessArray);
         System.out.println(evaluateFit(bestPositions[globalBestIndex]));
-    }
-
-    private void toCSVFile(double[] arr) {
-        try {
-            BufferedWriter br = new BufferedWriter(new FileWriter("pso.csv"));
-            StringBuilder sb = new StringBuilder();
-            for (double el : arr) {
-                sb.append(el);
-                sb.append(",\n");
-            }
-            br.write(sb.toString());
-            br.close();
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
+        return globalFitnessArray;
     }
 }
