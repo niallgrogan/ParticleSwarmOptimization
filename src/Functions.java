@@ -77,4 +77,22 @@ public class Functions {
 //    double upperBound = 100;
 //    double lowerBound = -100;
 
+    //Griewank(10D) Function
+//    double fitness = 0.0;
+//    double sum = 0.0;
+//    //Need to start product as 1
+//    double product = 1.0;
+//    for (int i=0; i<dimensions; i++)
+//    {
+//        sum += ((p[i]*p[i])/4000.0);
+//        //Note the plus one
+//        product *= Math.cos(p[i]/Math.sqrt(i+1));
+//    }
+//    //May be a problem dividing double by int
+//    fitness = (sum - product + 1.0);
+//    return fitness;
+//    int dimensions = 10;
+//    double upperBound = 600;
+//    double lowerBound = -600;
+
 }

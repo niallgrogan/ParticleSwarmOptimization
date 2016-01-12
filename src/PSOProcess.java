@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Random;
 import java.util.Vector;
 
@@ -7,6 +10,7 @@ public class PSOProcess implements Constants{
     private double[][] bestPositions = new double[swarmSize][dimensions];
     private double[] bestFitnesses = new double[swarmSize];
     private int globalBestIndex;
+    private double[] globalFitnessArray = new double[numIterations];
 
     public PSOProcess() {}
 
@@ -44,11 +48,19 @@ public class PSOProcess implements Constants{
     }
 
     private double evaluateFit(double[] p) {
-        //Schaffer(2D) Function
+        //Griewank(10D) Function
         double fitness = 0.0;
-        double numer = Math.pow(Math.sin(p[0]*p[0] - p[1]*p[1]),2)-0.5;
-        double denom = Math.pow((1.0 + 0.001*(p[0]*p[0] + p[1]*p[1])),2);
-        fitness = 0.5 + (numer/denom);
+        double sum = 0.0;
+        //Need to start product as 1
+        double product = 1.0;
+        for (int i=0; i<dimensions; i++)
+        {
+            sum += ((p[i]*p[i])/4000.0);
+            //Note the plus one
+            product *= Math.cos(p[i]/Math.sqrt(i+1));
+        }
+        //May be a problem dividing double by int
+        fitness = (sum - product + 1.0);
         return fitness;
     }
 
@@ -96,8 +108,25 @@ public class PSOProcess implements Constants{
                 }
                 findGBest();
             }
-            System.out.println(evaluateFit(bestPositions[globalBestIndex]));
+            globalFitnessArray[j] = evaluateFit(bestPositions[globalBestIndex]);
         }
+        toCSVFile(globalFitnessArray);
         System.out.println(evaluateFit(bestPositions[globalBestIndex]));
+    }
+
+    private void toCSVFile(double[] arr) {
+        try {
+            BufferedWriter br = new BufferedWriter(new FileWriter("pso.csv"));
+            StringBuilder sb = new StringBuilder();
+            for (double el : arr) {
+                sb.append(el);
+                sb.append(",\n");
+            }
+            br.write(sb.toString());
+            br.close();
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 }
