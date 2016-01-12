@@ -2,11 +2,10 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
-import java.util.Vector;
 
-public class PSOProcess implements Constants{
+public abstract class PSOProcess implements Constants{
 
-    Vector<Particle> swarm = new Vector<Particle>(swarmSize);
+    Particle[] swarm = new Particle[swarmSize];
     private double[][] bestPositions = new double[swarmSize][dimensions];
     private double[] bestFitnesses = new double[swarmSize];
     private int globalBestIndex;
@@ -15,37 +14,36 @@ public class PSOProcess implements Constants{
     public PSOProcess() {}
 
     public void initialise() {
-        for(int i=0; i<swarm.capacity(); i++)
+        for(int i=0; i<swarm.length; i++)
         {
             Particle p = new Particle(dimensions);
-            swarm.add(p);
+            swarm[i] = p;
             bestPositions[i] = p.getP();
         }
-        findGBest();
     }
-
-    private void findGBest() {
-        for(int i=0; i<bestPositions.length; i++)
-        {
-            bestFitnesses[i] = evaluateFit(bestPositions[i]);
-        }
-        globalBestIndex = getMinPos(bestFitnesses);
-    }
-
-    private int getMinPos(double[] fitnesses)
-    {
-        int pos = 0;
-        double minVal = fitnesses[0];
-        for(int i=0; i<fitnesses.length; i++)
-        {
-            if(fitnesses[i] < minVal)
-            {
-                pos = i;
-                minVal = fitnesses[i];
-            }
-        }
-        return pos;
-    }
+//
+//    private void findGBest() {
+//        for(int i=0; i<bestPositions.length; i++)
+//        {
+//            bestFitnesses[i] = evaluateFit(bestPositions[i]);
+//        }
+//        globalBestIndex = getMinPos(bestFitnesses);
+//    }
+//
+//    private int getMinPos(double[] fitnesses)
+//    {
+//        int pos = 0;
+//        double minVal = fitnesses[0];
+//        for(int i=0; i<fitnesses.length; i++)
+//        {
+//            if(fitnesses[i] < minVal)
+//            {
+//                pos = i;
+//                minVal = fitnesses[i];
+//            }
+//        }
+//        return pos;
+//    }
 
     private double evaluateFit(double[] p) {
         //Griewank(10D) Function
@@ -64,18 +62,20 @@ public class PSOProcess implements Constants{
         return fitness;
     }
 
+    public abstract double[] findLocalGBest(Particle p);
+
     public void execute() {
 
         for (int j=0; j<numIterations; j++)
         {
-            for(int i=0; i<swarm.capacity(); i++)
+            for(int i=0; i<swarm.length; i++)
             {
 
-                Particle p = swarm.elementAt(i);
+                Particle p = swarm[i];
 
                 //Getting our pBest and gBest
                 double[] pbest = bestPositions[i];
-                double[] gbest = bestPositions[globalBestIndex];
+                double[] gbest = findLocalGBest(swarm[i]);
                 double[] newVel = new double[dimensions];
                 double[] newPos = new double[dimensions];
 
@@ -106,7 +106,6 @@ public class PSOProcess implements Constants{
                 {
                     bestPositions[i] = newPos;
                 }
-                findGBest();
             }
             globalFitnessArray[j] = evaluateFit(bestPositions[globalBestIndex]);
         }
