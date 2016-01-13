@@ -9,8 +9,8 @@ public class lBestPSO extends PSOProcess{
     //a circular array.
     @Override
     public double[] findLocalGBest(int particleNumber) {
-        double[] localFitnesses = new double[3];
         if(particleNumber == 0) {
+            double[] localFitnesses = new double[3];
             localFitnesses[0] = evaluateFit(bestPositions[swarmSize-1]);
             localFitnesses[1] = evaluateFit(bestPositions[0]);
             localFitnesses[2] = evaluateFit(bestPositions[1]);
@@ -27,6 +27,7 @@ public class lBestPSO extends PSOProcess{
             }
         }
         else if(particleNumber == swarmSize-1) {
+            double[] localFitnesses = new double[3];
             localFitnesses[0] = evaluateFit(bestPositions[swarmSize-2]);
             localFitnesses[1] = evaluateFit(bestPositions[swarmSize-1]);
             localFitnesses[2] = evaluateFit(bestPositions[0]);
@@ -43,6 +44,7 @@ public class lBestPSO extends PSOProcess{
             }
         }
         else {
+            double[] localFitnesses = new double[3];
             localFitnesses[0] = evaluateFit(bestPositions[particleNumber - 1]);
             localFitnesses[1] = evaluateFit(bestPositions[particleNumber]);
             localFitnesses[2] = evaluateFit(bestPositions[particleNumber + 1]);
@@ -58,6 +60,7 @@ public class lBestPSO extends PSOProcess{
                 localBestIndex = particleNumber;
             }
         }
+        System.out.println(particleNumber+":"+evaluateFit(bestPositions[localBestIndex]));
         return bestPositions[localBestIndex];
     }
 }

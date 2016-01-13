@@ -5,6 +5,16 @@ import java.io.IOException;
 public class PSOMain implements Constants{
     public static void main(String[] Args)
     {
+        double[] results = new double[30];
+        //getConvergenceData();
+        for(int i=0; i<3; i++) {
+            lBestPSO von = new lBestPSO();
+            von.initialise();
+            von.execute();
+        }
+    }
+
+    private static void getConvergenceData() {
         double[][] results = new double[3][numIterations];
         vonNeuPSO von = new vonNeuPSO();
         von.initialise();
