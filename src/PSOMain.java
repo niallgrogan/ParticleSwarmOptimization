@@ -16,15 +16,15 @@ public class PSOMain implements Constants{
 
     private static void getConvergenceData() {
         double[][] results = new double[3][numIterations];
-        vonNeuPSO von = new vonNeuPSO();
+        vonNeuPSO von = new vonNeuPSO("Sphere");
         von.initialise();
         results[0] = von.execute();
 
-        lBestPSO l = new lBestPSO();
+        lBestPSO l = new lBestPSO("Sphere");
         l.initialise();
         results[1] = l.execute();
 
-        gBestPSO g = new gBestPSO();
+        gBestPSO g = new gBestPSO("Sphere");
         g.initialise();
         results[2] = g.execute();
 

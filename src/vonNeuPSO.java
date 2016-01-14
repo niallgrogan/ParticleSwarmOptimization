@@ -3,7 +3,9 @@
  */
 public class vonNeuPSO extends PSOProcess {
 
-    public vonNeuPSO() {}
+    public vonNeuPSO(String function) {
+        fitnessFunction = new Functions(function);
+    }
 
     //This method is slightly hacked together atm, may return and use
     //a circular array.

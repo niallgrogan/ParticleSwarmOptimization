@@ -9,6 +9,7 @@ public abstract class PSOProcess implements Constants{
     public int localBestIndex;
     private int globalBestIndex;
     private double[] globalFitnessArray = new double[numIterations];
+    public Functions fitnessFunction;
 
     public PSOProcess() {}
 
@@ -50,13 +51,7 @@ public abstract class PSOProcess implements Constants{
     }
 
     public double evaluateFit(double[] p) {
-        //Sphere function
-        double fitness = 0;
-        for (int i=0; i<dimensions; i++)
-        {
-            fitness = fitness + Math.pow(p[i],2);
-        }
-        return fitness;
+        return fitnessFunction.findFitness(p);
     }
 
     public abstract double[] findLocalGBest(int particleNumber);

@@ -1,14 +1,33 @@
 /**
  * Created by Niall on 18/11/2015.
  */
-public class Functions {
+public class Functions implements Constants{
+
+    private String activeFunction;
+
+    public Functions(String functionName) {
+        activeFunction = functionName;
+    }
+
+    public double findFitness(double[] p) {
+        double fitness = 0;
+        switch(activeFunction) {
+            case "Sphere":  for (int i=0; i<p.length; i++)
+                            {
+                                fitness = fitness + Math.pow(p[i],2);
+                            }
+                            break;
+
+            case "Rosenbrock":  for (int i=0; i<p.length-1; i++)
+                                {
+                                    fitness = fitness + (100*Math.pow(p[i+1] - Math.pow(p[i],2),2)+Math.pow((1-p[i]),2));
+                                }
+                                break;
+        }
+        return fitness;
+
+    }
     //Sphere function
-//    double fitness = 0;
-//    for (int i=0; i<dimensions; i++)
-//    {
-//        fitness = fitness + Math.pow(p[i],2);
-//    }
-//    return fitness;
 //    double upperBound = 5.12;
 //    double lowerBound = -5.12;
 
@@ -23,12 +42,6 @@ public class Functions {
 //    double lowerBound = -100;
 
     //Rosenbrock function
-//    double fitness = 0;
-//    for (int i=0; i<dimensions-1; i++)
-//    {
-//        fitness = fitness + (100*Math.pow(p[i+1] - Math.pow(p[i],2),2)+Math.pow((1-p[i]),2));
-//    }
-//    return fitness;
 //    double upperBound = 2.048;
 //    double lowerBound = -2.048;
 

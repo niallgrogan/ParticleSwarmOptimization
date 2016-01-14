@@ -3,7 +3,9 @@
  */
 public class lBestPSO extends PSOProcess{
 
-    public lBestPSO() {}
+    public lBestPSO(String function) {
+        fitnessFunction = new Functions(function);
+    }
 
     //This method is slightly hacked together atm, may return and use
     //a circular array.

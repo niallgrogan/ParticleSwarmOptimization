@@ -3,7 +3,9 @@
  */
 public class gBestPSO extends PSOProcess {
 
-    public gBestPSO() {}
+    public gBestPSO(String function) {
+        fitnessFunction = new Functions(function);
+    }
 
     @Override
     public double[] findLocalGBest(int particleNumber) {
