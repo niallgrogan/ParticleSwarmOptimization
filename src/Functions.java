@@ -4,9 +4,15 @@
 public class Functions implements Constants{
 
     private String activeFunction;
+    public int dimensions;
 
     public Functions(String functionName) {
         activeFunction = functionName;
+        switch (activeFunction) {
+            case "Sphere":  dimensions = 30;
+                            break;
+        }
+
     }
 
     public double findFitness(double[] p) {

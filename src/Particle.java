@@ -3,11 +3,13 @@
  */
 public class Particle implements Constants{
 
-    private double[] pos = new double[dimensions];
-    private double[] vel = new double[dimensions];
+    private double[] pos;
+    private double[] vel;
 
     public Particle(int dimension)
     {
+        pos = new double[dimension];
+        vel = new double[dimension];
         for(int i=0; i<dimension; i++) {
             //Set randomly inside problem bounds
             pos[i] = (upperBound - lowerBound) * Math.random() + lowerBound;

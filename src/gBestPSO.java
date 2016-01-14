@@ -5,6 +5,8 @@ public class gBestPSO extends PSOProcess {
 
     public gBestPSO(String function) {
         fitnessFunction = new Functions(function);
+        bestPositions = new double[swarmSize][fitnessFunction.dimensions];
+        globalBests = new double[swarmSize][fitnessFunction.dimensions];
     }
 
     @Override

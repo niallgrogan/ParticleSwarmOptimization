@@ -5,6 +5,8 @@ public class vonNeuPSO extends PSOProcess {
 
     public vonNeuPSO(String function) {
         fitnessFunction = new Functions(function);
+        bestPositions = new double[swarmSize][fitnessFunction.dimensions];
+        globalBests = new double[swarmSize][fitnessFunction.dimensions];
     }
 
     //This method is slightly hacked together atm, may return and use

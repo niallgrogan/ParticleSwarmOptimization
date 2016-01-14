@@ -2,21 +2,21 @@ import java.util.Random;
 
 public abstract class PSOProcess implements Constants{
 
+    public PSOProcess() {}
+
+    public Functions fitnessFunction;
     Particle[] swarm = new Particle[swarmSize];
-    public double[][] bestPositions = new double[swarmSize][dimensions];
-    public double[][] globalBests = new double[swarmSize][dimensions];
+    public double[][] bestPositions;
+    public double[][] globalBests;
     public double[] bestFitnesses = new double[swarmSize];
     public int localBestIndex;
     private int globalBestIndex;
     private double[] globalFitnessArray = new double[numIterations];
-    public Functions fitnessFunction;
-
-    public PSOProcess() {}
 
     public void initialise() {
         for(int i=0; i<swarm.length; i++)
         {
-            Particle p = new Particle(dimensions);
+            Particle p = new Particle(fitnessFunction.dimensions);
             swarm[i] = p;
             bestPositions[i] = p.getP();
         }
@@ -68,11 +68,11 @@ public abstract class PSOProcess implements Constants{
                 //Getting our pBest and gBest
                 double[] pbest = bestPositions[i];
                 double[] gbest = globalBests[i];
-                double[] newVel = new double[dimensions];
-                double[] newPos = new double[dimensions];
+                double[] newVel = new double[fitnessFunction.dimensions];
+                double[] newPos = new double[fitnessFunction.dimensions];
 
                 //PSO Equations with Constriction Factor
-                for(int k=0; k<dimensions; k++)
+                for(int k=0; k<fitnessFunction.dimensions; k++)
                 {
                     newVel[k] = constriction*(p.getV()[k] + new Random().nextDouble()*c1*(pbest[k] - p.getP()[k]) + new Random().nextDouble()*c2*(gbest[k] - p.getP()[k]));
                     //Limiting velocity
