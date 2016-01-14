@@ -14,5 +14,4 @@ public class gBestPSO extends PSOProcess {
         localBestIndex = getMinPos(bestFitnesses);
         return bestPositions[localBestIndex];
     }
-
 }

@@ -4,6 +4,7 @@ public abstract class PSOProcess implements Constants{
 
     Particle[] swarm = new Particle[swarmSize];
     public double[][] bestPositions = new double[swarmSize][dimensions];
+    public double[][] globalBests = new double[swarmSize][dimensions];
     public double[] bestFitnesses = new double[swarmSize];
     public int localBestIndex;
     private int globalBestIndex;
@@ -17,6 +18,11 @@ public abstract class PSOProcess implements Constants{
             Particle p = new Particle(dimensions);
             swarm[i] = p;
             bestPositions[i] = p.getP();
+        }
+        for(int k=0; k<swarmSize; k++)
+        {
+            double[] newBest = findLocalGBest(k);
+            globalBests[k] = newBest;
         }
     }
 
@@ -66,7 +72,7 @@ public abstract class PSOProcess implements Constants{
 
                 //Getting our pBest and gBest
                 double[] pbest = bestPositions[i];
-                double[] gbest = findLocalGBest(i);
+                double[] gbest = globalBests[i];
                 double[] newVel = new double[dimensions];
                 double[] newPos = new double[dimensions];
 
@@ -79,15 +85,16 @@ public abstract class PSOProcess implements Constants{
                     else if(newVel[k] < -Vmax) {newVel[k] = -Vmax;}
 
                     newPos[k] = p.getP()[k] + newVel[k];
-                    //Implementing a reflecting boundary
-                    if(newPos[k] > upperBound) {
-                        double diff = newPos[k] - upperBound;
-                        newPos[k] = newPos[k] - 2*diff;
-                    }
-                    else if(newPos[k] < lowerBound) {
-                        double diff = Math.abs(newPos[k] - lowerBound);
-                        newPos[k] = newPos[k] + 2*diff;
-                    }
+//                    //THIS IS INCORRECT
+//                    //Implementing a reflecting boundary
+//                    if(newPos[k] > upperBound) {
+//                        double diff = newPos[k] - upperBound;
+//                        newPos[k] = newPos[k] - 2*diff;
+//                    }
+//                    else if(newPos[k] < lowerBound) {
+//                        double diff = Math.abs(newPos[k] - lowerBound);
+//                        newPos[k] = newPos[k] + 2*diff;
+//                    }
                 }
                 //Setting new particle velocity and position
                 p.setP(newPos);
@@ -96,6 +103,13 @@ public abstract class PSOProcess implements Constants{
                 if(evaluateFit(newPos) < evaluateFit(pbest))
                 {
                     bestPositions[i] = newPos;
+                }
+            }
+            for(int k=0; k<swarmSize; k++)
+            {
+                double[] newBest = findLocalGBest(k);
+                if(evaluateFit(newBest) < evaluateFit(globalBests[k])) {
+                    globalBests[k] = newBest;
                 }
             }
             findGBest();

@@ -12,6 +12,16 @@ public class Functions {
 //    double upperBound = 5.12;
 //    double lowerBound = -5.12;
 
+//    //f1 Shifted Sphere
+//    double fitness = 0;
+//    for (int i=0; i<dimensions; i++)
+//    {
+//        fitness = fitness + Math.pow((p[i] - optimum[i]),2);
+//    }
+//    return fitness - 450;
+//    double upperBound = 100;
+//    double lowerBound = -100;
+
     //Rosenbrock function
 //    double fitness = 0;
 //    for (int i=0; i<dimensions-1; i++)
@@ -66,6 +76,18 @@ public class Functions {
 //    return fitness;
 //    double upperBound = 5.12;
 //    double lowerBound = -5.12;
+
+//    f9 - Shifted Rastrigin Function
+//    double fitness = 0.0;
+//    double sum = 0.0;
+//    for (int i=0; i<dimensions; i++)
+//    {
+//        sum += (p[i]*p[i] - 10.0*Math.cos(2*Math.PI*p[i]));
+//    }
+//    fitness = 10*dimensions + sum;
+//    return fitness - 330;
+//    double upperBound = 5;
+//    double lowerBound = -5;
 
 //    //Schaffer(2D) Function
 //    double fitness = 0.0;

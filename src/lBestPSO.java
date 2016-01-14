@@ -60,7 +60,6 @@ public class lBestPSO extends PSOProcess{
                 localBestIndex = particleNumber;
             }
         }
-        System.out.println(particleNumber+":"+evaluateFit(bestPositions[localBestIndex]));
         return bestPositions[localBestIndex];
     }
 }
