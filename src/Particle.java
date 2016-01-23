@@ -6,7 +6,7 @@ public class Particle implements Constants{
     private double[] pos;
     private double[] vel;
 
-    public Particle(int dimension)
+    public Particle(int dimension, double upperBound, double lowerBound)
     {
         pos = new double[dimension];
         vel = new double[dimension];

@@ -16,7 +16,7 @@ public abstract class PSOProcess implements Constants{
     public void initialise() {
         for(int i=0; i<swarm.length; i++)
         {
-            Particle p = new Particle(fitnessFunction.dimensions);
+            Particle p = new Particle(fitnessFunction.dimensions, fitnessFunction.upperBound, fitnessFunction.lowerBound);
             swarm[i] = p;
             bestPositions[i] = p.getP();
         }
@@ -110,7 +110,7 @@ public abstract class PSOProcess implements Constants{
             findGBest();
             globalFitnessArray[j] = evaluateFit(bestPositions[globalBestIndex]);
         }
-        System.out.println(evaluateFit(bestPositions[globalBestIndex]));
+//        System.out.println(evaluateFit(bestPositions[globalBestIndex]));
         return globalFitnessArray;
     }
 }
