@@ -6,8 +6,8 @@ public class PSOMain implements Constants{
     public static void main(String[] Args)
     {
         double[] results = new double[30];
-//        getConvergenceData();
-          getMeanData();
+        getConvergenceData();
+//          getMeanData();
 //        for(int i=0; i<1; i++) {
 //            lBestPSO von = new lBestPSO();
 //            von.initialise();
@@ -17,19 +17,20 @@ public class PSOMain implements Constants{
 
     private static void getMeanData() {
         for (String function :functions) {
-            double[][] results = new double[3][3];
-            for(int i=0; i<3; i++) {
-                vonNeuPSO von = new vonNeuPSO(function);
-                von.initialise();
-                results[0][i] = von.execute()[9999];
+            double[][] results = new double[3][25];
+            for(int i=0; i<25; i++) {
+                gBestPSO g = new gBestPSO(function);
+                g.initialise();
+                results[0][i] = g.execute()[9999];
 
                 lBestPSO l = new lBestPSO(function);
                 l.initialise();
                 results[1][i] = l.execute()[9999];
 
-                gBestPSO g = new gBestPSO(function);
-                g.initialise();
-                results[2][i] = g.execute()[9999];
+                vonNeuPSO von = new vonNeuPSO(function);
+                von.initialise();
+                results[2][i] = von.execute()[9999];
+
                 System.out.println(i);
             }
             toCSVFile(results, function);
@@ -40,39 +41,41 @@ public class PSOMain implements Constants{
     private static void getConvergenceData() {
         for (String function :functions) {
             double[][] results = new double[3][numIterations];
-            vonNeuPSO von = new vonNeuPSO(function);
-            von.initialise();
-            results[0] = von.execute();
+
+            gBestPSO g = new gBestPSO(function);
+            g.initialise();
+            results[0] = g.execute();
 
             lBestPSO l = new lBestPSO(function);
             l.initialise();
             results[1] = l.execute();
 
-            gBestPSO g = new gBestPSO(function);
-            g.initialise();
-            results[2] = g.execute();
+            vonNeuPSO von = new vonNeuPSO(function);
+            von.initialise();
+            results[2] = von.execute();
 
             toCSVFile(results, function);
+            System.out.println("Finished "+function);
         }
     }
 
 
     private static void toCSVFile(double[][] arrDouble, String function) {
         try {
-            BufferedWriter br = new BufferedWriter(new FileWriter(function+"Means.csv"));
+            BufferedWriter br = new BufferedWriter(new FileWriter(function+"Convergence.csv"));
             StringBuilder sb = new StringBuilder();
-            sb.append("Von Neuman");
+            sb.append("gBest");
             sb.append(", ");
             sb.append("lBest");
             sb.append(", ");
-            sb.append("gBest");
+            sb.append("Von Neumann");
             sb.append(",\n");
 
             double[] arr0 = arrDouble[0];
             double[] arr1 = arrDouble[1];
             double[] arr2 = arrDouble[2];
             //Change when getting convergence data
-            for(int i=0; i<3; i++)
+            for(int i=0; i<numIterations; i++)
             {
                 sb.append(arr0[i]);
                 sb.append(", ");
