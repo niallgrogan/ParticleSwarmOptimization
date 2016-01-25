@@ -70,6 +70,7 @@ public abstract class PSOProcess implements Constants{
                 double[] gbest = globalBests[i];
                 double[] newVel = new double[fitnessFunction.dimensions];
                 double[] newPos = new double[fitnessFunction.dimensions];
+                boolean inBounds = true;
 
                 //PSO Equations with Constriction Factor
                 for(int k=0; k<fitnessFunction.dimensions; k++)
@@ -80,24 +81,20 @@ public abstract class PSOProcess implements Constants{
                     else if(newVel[k] < -Vmax) {newVel[k] = -Vmax;}
 
                     newPos[k] = p.getP()[k] + newVel[k];
-//                    //THIS IS INCORRECT
-//                    //Implementing a reflecting boundary
-//                    if(newPos[k] > upperBound) {
-//                        double diff = newPos[k] - upperBound;
-//                        newPos[k] = newPos[k] - 2*diff;
-//                    }
-//                    else if(newPos[k] < lowerBound) {
-//                        double diff = Math.abs(newPos[k] - lowerBound);
-//                        newPos[k] = newPos[k] + 2*diff;
-//                    }
+                    //Setting boundary conditions
+                    if(newPos[k] > fitnessFunction.upperBound | newPos[k] < fitnessFunction.lowerBound) {
+                        inBounds = false;
+                    }
                 }
                 //Setting new particle velocity and position
                 p.setP(newPos);
                 p.setV(newVel);
 
-                if(evaluateFit(newPos) < evaluateFit(pbest))
-                {
-                    bestPositions[i] = newPos;
+                if(inBounds) {
+                    if(evaluateFit(newPos) < evaluateFit(pbest))
+                    {
+                        bestPositions[i] = newPos;
+                    }
                 }
             }
             for(int k=0; k<swarmSize; k++)
@@ -110,7 +107,7 @@ public abstract class PSOProcess implements Constants{
             findGBest();
             globalFitnessArray[j] = evaluateFit(bestPositions[globalBestIndex]);
         }
-//        System.out.println(evaluateFit(bestPositions[globalBestIndex]));
+        System.out.println(evaluateFit(bestPositions[globalBestIndex]));
         return globalFitnessArray;
     }
 }
