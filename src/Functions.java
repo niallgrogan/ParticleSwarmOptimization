@@ -1,44 +1,128 @@
 /**
  * Created by Niall on 18/11/2015.
  */
-public class Functions {
-    //Sphere Function (2D) ???
-    //Min=0 (x1, x2.... xn)=0
-    //Search -inf < x < inf, 1<i<n
-    //double fitness = x*x + x*x;
+public class Functions implements Constants{
 
-    //Rosenbrock Function (a=1 and b=100) ???
-    //Min = (n=2): f(1,1) = 0
-    //Search -inf < x < inf, 1<i<n
-    //double fitness = Math.pow((1-x),2) + 100*Math.pow((y-x*x),2);
+    private String activeFunction;
+    public int dimensions;
+    public double upperBound;
+    public double lowerBound;
 
-    //Griewank Function
-    //Min = f(x*) = 0 for x*=(0,....0)
-    //Search in Hypercube (-600,600)
-    //Not yet implemented
+    public Functions(String functionName) {
+        activeFunction = functionName;
+        switch (activeFunction) {
+            case "Sphere":  dimensions = 30;
+                upperBound = 5.12;
+                lowerBound = -5.12;
+                break;
+            case "Rosenbrock":  dimensions = 30;
+                upperBound = 2.048;
+                lowerBound = -2.048;
+                break;
+            case "Ackley":  dimensions = 30;
+                upperBound = 32;
+                lowerBound = -32;
+                break;
+            case "Griewank":  dimensions = 30;
+                upperBound = 600;
+                lowerBound = -600;
+                break;
+            case "Rastrigin":  dimensions = 30;
+                upperBound = 5.12;
+                lowerBound = -5.12;
+                break;
+            case "Schaffer(2D)":  dimensions = 2;
+                upperBound = 100;
+                lowerBound = -100;
+                break;
+            case "Griewank(10D)":  dimensions = 10;
+                upperBound = 600;
+                lowerBound = -600;
+                break;
+        }
+    }
 
-    //Rastrigin Function (2D???)
-    //Min = f(0) = 0
-    //Search (x) -> (-5.12, 5.12)
-    //double fitness = 10*2 + (x*x - 10*Math.cos(2*Math.PI*x)) + (x*x - 10*Math.cos(2*Math.PI*x));
+    public double findFitness(double[] p) {
+        double fitness = 0.0;
+        double sumOne = 0.0;
+        double sumTwo = 0.0;
+        double sum = 0.0;
+        //Need to start product as 1
+        double product = 1.0;
+        switch(activeFunction) {
+            case "Sphere":  for (int i=0; i<p.length; i++)
+                            {
+                                fitness = fitness + Math.pow(p[i],2);
+                            }
+                break;
 
-    //Schaffer 2D
-    //Min = f(0,0) = 0
-    //Search (x,y) -> (-100,100)
-    //double fitness = 0.5 + (Math.pow((Math.sin(x*x - y*y)),2) - 0.5)/Math.pow((1 + 0.001*(x*x + y*y)),2);
+            case "Rosenbrock":  for (int i=0; i<p.length-1; i++)
+                                {
+                                    fitness = fitness + (100*Math.pow(p[i+1] - Math.pow(p[i],2),2)+Math.pow((1-p[i]),2));
+                                }
+                break;
+            case "Ackley":  double c = 2*Math.PI;
+                            for (int i=0; i<dimensions; i++)
+                            {
+                                sumOne = sumOne + Math.pow(p[i],2);
+                                sumTwo = sumTwo + Math.cos(c*p[i]);
+                            }
+                            //May be a problem dividing double by int
+                            fitness = -20*Math.exp(-0.2*Math.sqrt(sumOne/dimensions)) - Math.exp(sumTwo/dimensions) + 20 + Math.exp(1);
+                break;
+            case "Griewank":    for (int i=0; i<dimensions; i++)
+                                {
+                                    sum += ((p[i]*p[i])/4000.0);
+                                    //Note the plus one
+                                    product *= Math.cos(p[i]/Math.sqrt(i+1));
+                                }
+                                //May be a problem dividing double by int
+                                fitness = (sum - product + 1.0);
+                break;
+            case "Rastrigin":   for (int i=0; i<dimensions; i++)
+                                {
+                                    sum += (p[i]*p[i] - 10.0*Math.cos(2*Math.PI*p[i]));
+                                }
+                                fitness = 10*dimensions + sum;
+                break;
+            case "Schaffer(2D)":    double numer = Math.pow(Math.sin(p[0]*p[0] - p[1]*p[1]),2)-0.5;
+                                    double denom = Math.pow((1.0 + 0.001*(p[0]*p[0] + p[1]*p[1])),2);
+                                    fitness = 0.5 + (numer/denom);
+                break;
+            case "Griewank(10D)":   for (int i=0; i<dimensions; i++)
+                                    {
+                                        sum += ((p[i]*p[i])/4000.0);
+                                        //Note the plus one
+                                        product *= Math.cos(p[i]/Math.sqrt(i+1));
+                                    }
+                                    //May be a problem dividing double by int
+                                    fitness = (sum - product + 1.0);
+                break;
+        }
+        return fitness;
 
-    //Ackley's Function
-    //Min=0 (x=0,y=0)
-    //Search x,y -> (-5,5)
-    //double fitness = -20*Math.exp(-0.2*(Math.sqrt(0.5*(x*x + y*y)))) - Math.exp(0.5*(Math.cos(2*x*Math.PI)+Math.cos(2*y*Math.PI))) + Math.E + 20;
+    }
 
-    //Booths Function
-    //Min = f(1,3) = 0
-    //Search (x,y) -> (-10,10)
-    //double fitness = Math.pow((x+2*y-7),2) + Math.pow((2*x+y-5),2);
+//    //f1 Shifted Sphere
+//    double fitness = 0;
+//    for (int i=0; i<dimensions; i++)
+//    {
+//        fitness = fitness + Math.pow((p[i] - optimum[i]),2);
+//    }
+//    return fitness - 450;
+//    double upperBound = 100;
+//    double lowerBound = -100;
 
-    //Matyas Function
-    //Min = f(0,0) = 0
-    //Search (x,y) -> (-10,10)
-    //double fitness = 0.26*(x*x + y*y) - 0.48*x*y;
+//    f9 - Shifted Rastrigin Function
+//    double fitness = 0.0;
+//    double sum = 0.0;
+//    for (int i=0; i<dimensions; i++)
+//    {
+//        sum += (p[i]*p[i] - 10.0*Math.cos(2*Math.PI*p[i]));
+//    }
+//    fitness = 10*dimensions + sum;
+//    return fitness - 330;
+//    double upperBound = 5;
+//    double lowerBound = -5;
+
 }

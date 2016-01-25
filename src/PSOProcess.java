@@ -1,103 +1,116 @@
-import java.util.Vector;
+import java.util.Random;
 
-/**
- * Created by Niall on 17/11/2015.
- */
-public class PSOProcess implements Constants{
-
-    Vector<Particle> swarm = new Vector<Particle>(swarmSize);
-    private Position[] bestPositions = new Position[swarmSize];
-    private int globalBestIndex;
-    //Not good to have this here
-    private double globalFitness=4;
-    private int iterations = numIterations;
+public abstract class PSOProcess implements Constants{
 
     public PSOProcess() {}
 
-    public PSOProcess(int i) {
-        iterations = i;
-    }
+    public Functions fitnessFunction;
+    Particle[] swarm = new Particle[swarmSize];
+    public double[][] bestPositions;
+    public double[][] globalBests;
+    public double[] bestFitnesses = new double[swarmSize];
+    public int localBestIndex;
+    private int globalBestIndex;
+    private double[] globalFitnessArray = new double[numIterations];
 
-    private void initialise() {
-        for(int i=0; i<swarm.capacity(); i++)
+    public void initialise() {
+        for(int i=0; i<swarm.length; i++)
         {
-            //May want to introduce initialisation range here
-            Particle p = new Particle();
-            swarm.add(p);
-            bestPositions[i] = new Position(p.getP().getX(), p.getP().getY());
+            Particle p = new Particle(fitnessFunction.dimensions, fitnessFunction.upperBound, fitnessFunction.lowerBound);
+            swarm[i] = p;
+            bestPositions[i] = p.getP();
         }
-        findGBest();
+        for(int k=0; k<swarmSize; k++)
+        {
+            double[] newBest = findLocalGBest(k);
+            globalBests[k] = newBest;
+        }
     }
 
     private void findGBest() {
         for(int i=0; i<bestPositions.length; i++)
         {
-            double bestFitness = evaluateFit(bestPositions[i].getX(),bestPositions[i].getY());
-            if(bestFitness < globalFitness)
+            bestFitnesses[i] = evaluateFit(bestPositions[i]);
+        }
+        globalBestIndex = getMinPos(bestFitnesses);
+    }
+
+    public int getMinPos(double[] fitnesses)
+    {
+        int pos = 0;
+        double minVal = fitnesses[0];
+        for(int i=0; i<fitnesses.length; i++)
+        {
+            if(fitnesses[i] < minVal)
             {
-                globalFitness = bestFitness;
-                globalBestIndex = i;
+                pos = i;
+                minVal = fitnesses[i];
             }
         }
+        return pos;
     }
 
-    private double evaluateFit(double x, double y) {
-        //Rosenbrock Function (a=1 and b=100) ???
-        //Min = (n=2): f(1,1) = 0
-        //Search -inf < x < inf, 1<i<n
-        double fitness = Math.pow((1-x),2) + 100*Math.pow((y-x*x),2);
-        return fitness;
+    public double evaluateFit(double[] p) {
+        return fitnessFunction.findFitness(p);
     }
 
-    public void execute() {
-        this.initialise();
+    public abstract double[] findLocalGBest(int particleNumber);
 
-        for (int j=0; j<iterations; j++)
+    public double[] execute() {
+
+        for (int j=0; j<numIterations; j++)
         {
-            for(int i=0; i<swarm.capacity(); i++)
+            for(int i=0; i<swarm.length; i++)
             {
-                double r1 = Math.random();
-                double r2 = Math.random();
 
-                Particle p = swarm.elementAt(i);
+                Particle p = swarm[i];
 
                 //Getting our pBest and gBest
-                double pbestX = bestPositions[i].getX();
-                double pbestY = bestPositions[i].getY();
-                double gbestX = bestPositions[globalBestIndex].getX();
-                double gbestY = bestPositions[globalBestIndex].getY();
+                double[] pbest = bestPositions[i];
+                double[] gbest = globalBests[i];
+                double[] newVel = new double[fitnessFunction.dimensions];
+                double[] newPos = new double[fitnessFunction.dimensions];
 
                 //PSO Equations with Constriction Factor
-                double newVelX = constriction*(p.getV().getX() + r1*c1*(pbestX - p.getP().getX()) + r2*c2*(gbestX - p.getP().getX()));
-                double newVelY = constriction*(p.getV().getY() + r1*c1*(pbestY - p.getP().getY()) + r2*c2*(gbestY - p.getP().getY()));
-
-                //Limiting velocity
-                if(newVelX > Vmax) {newVelX = Vmax;}
-                else if(newVelY > Vmax) {newVelY = Vmax;}
-
-                double newPosX = p.getP().getX() + newVelX;
-                double newPosY = p.getP().getY() + newVelY;
-
-                //Setting new particle velocity and position
-                p.setP(newPosX, newPosY);
-                p.setV(newVelX, newVelY);
-
-                if(evaluateFit(newPosX, newPosY) < evaluateFit(pbestX, pbestY))
+                for(int k=0; k<fitnessFunction.dimensions; k++)
                 {
-                    if (newPosX > upperBound || newPosX < lowerBound || newPosY > upperBound || newPosY < lowerBound) {}
-                    else {
-                        bestPositions[i] = new Position(newPosX, newPosY);
-                        findGBest();
-                    }
+                    newVel[k] = constriction*(p.getV()[k] + new Random().nextDouble()*c1*(pbest[k] - p.getP()[k]) + new Random().nextDouble()*c2*(gbest[k] - p.getP()[k]));
+                    //Limiting velocity
+                    if(newVel[k] > Vmax) {newVel[k] = Vmax;}
+                    else if(newVel[k] < -Vmax) {newVel[k] = -Vmax;}
+
+                    newPos[k] = p.getP()[k] + newVel[k];
+//                    //THIS IS INCORRECT
+//                    //Implementing a reflecting boundary
+//                    if(newPos[k] > upperBound) {
+//                        double diff = newPos[k] - upperBound;
+//                        newPos[k] = newPos[k] - 2*diff;
+//                    }
+//                    else if(newPos[k] < lowerBound) {
+//                        double diff = Math.abs(newPos[k] - lowerBound);
+//                        newPos[k] = newPos[k] + 2*diff;
+//                    }
+                }
+                //Setting new particle velocity and position
+                p.setP(newPos);
+                p.setV(newVel);
+
+                if(evaluateFit(newPos) < evaluateFit(pbest))
+                {
+                    bestPositions[i] = newPos;
                 }
             }
+            for(int k=0; k<swarmSize; k++)
+            {
+                double[] newBest = findLocalGBest(k);
+                if(evaluateFit(newBest) < evaluateFit(globalBests[k])) {
+                    globalBests[k] = newBest;
+                }
+            }
+            findGBest();
+            globalFitnessArray[j] = evaluateFit(bestPositions[globalBestIndex]);
         }
-        System.out.println("***");
-        for(int k=0; k<bestPositions.length; k++) {
-            System.out.print(evaluateFit(bestPositions[k].getX(), bestPositions[k].getY()) + "[" + k + "],\n");
-        }
-        findGBest();
-        System.out.println(globalBestIndex);
-        System.out.println(globalFitness);
+//        System.out.println(evaluateFit(bestPositions[globalBestIndex]));
+        return globalFitnessArray;
     }
 }

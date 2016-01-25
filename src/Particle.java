@@ -2,47 +2,27 @@
  * Created by Niall on 13/11/2015.
  */
 public class Particle implements Constants{
-    //Defined both as velocitites for simplicity atm
-    private Position p;
-    private Velocity v;
-    private double fitness;
 
-    public Particle()
+    private double[] pos;
+    private double[] vel;
+
+    public Particle(int dimension, double upperBound, double lowerBound)
     {
-        p = new Position((initUpBoundX-initLowBoundX)*Math.random()+initLowBoundX, (initUpBoundY-initLowBoundY)*Math.random()+initLowBoundY);
-        v = new Velocity(Math.random(), Math.random());
+        pos = new double[dimension];
+        vel = new double[dimension];
+        for(int i=0; i<dimension; i++) {
+            //Set randomly inside problem bounds
+            pos[i] = (upperBound - lowerBound) * Math.random() + lowerBound;
+            //Set using half diff method
+            vel[i] = (((upperBound - lowerBound) * Math.random() + lowerBound) - pos[i]) / 2;
+        }
     }
 
-    private void calculateFitness() {
-        double x = p.getX();
-        double y = p.getY();
-        fitness = x+y;
-    }
+    public void setP(double[] p) {pos = p;}
 
-    public double getFitness() {
-        calculateFitness();
-        return fitness;
-    }
+    public double[] getP() {return pos;}
 
-    public void setP(double x, double y)
-    {
-        p.setX(x);
-        p.setY(y);
-    }
+    public void setV(double[] v) {vel = v;}
 
-    public Position getP()
-    {
-        return p;
-    }
-
-    public void setV(double x, double y)
-    {
-        v.setX(x);
-        v.setY(y);
-    }
-
-    public Velocity getV()
-    {
-        return v;
-    }
+    public double[] getV() {return vel;}
 }
