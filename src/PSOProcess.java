@@ -7,6 +7,7 @@ public abstract class PSOProcess implements Constants{
     public Functions fitnessFunction;
     Particle[] swarm = new Particle[swarmSize];
     public double[][] bestPositions;
+    public double[][] secondBestPositions;
     public double[][] globalBests;
     public double[] bestFitnesses = new double[swarmSize];
     public int localBestIndex;
@@ -19,6 +20,7 @@ public abstract class PSOProcess implements Constants{
             Particle p = new Particle(fitnessFunction.dimensions, fitnessFunction.upperBound, fitnessFunction.lowerBound);
             swarm[i] = p;
             bestPositions[i] = p.getP();
+            secondBestPositions[i] = p.getP();
         }
         for(int k=0; k<swarmSize; k++)
         {
@@ -56,6 +58,16 @@ public abstract class PSOProcess implements Constants{
 
     public abstract double[] findLocalGBest(int particleNumber);
 
+    public double[] rouletteWheel(int i) {
+        double rand = new Random().nextDouble();
+        if(rand <= (double) (1/3)) {
+            return secondBestPositions[i];
+        }
+        else {
+            return bestPositions[i];
+        }
+    }
+
     public double[] execute() {
 
         for (int j=0; j<numIterations; j++)
@@ -68,6 +80,7 @@ public abstract class PSOProcess implements Constants{
                 //Getting our pBest and gBest
                 double[] pbest = bestPositions[i];
                 double[] gbest = globalBests[i];
+                double[] empTerm = rouletteWheel(i);
                 double[] newVel = new double[fitnessFunction.dimensions];
                 double[] newPos = new double[fitnessFunction.dimensions];
                 boolean inBounds = true;
@@ -75,7 +88,7 @@ public abstract class PSOProcess implements Constants{
                 //PSO Equations with Constriction Factor
                 for(int k=0; k<fitnessFunction.dimensions; k++)
                 {
-                    newVel[k] = constriction*(p.getV()[k] + new Random().nextDouble()*c1*(pbest[k] - p.getP()[k]) + new Random().nextDouble()*c2*(gbest[k] - p.getP()[k]));
+                    newVel[k] = constriction*(p.getV()[k] + new Random().nextDouble()*c1*(empTerm[k] - p.getP()[k]) + new Random().nextDouble()*c2*(gbest[k] - p.getP()[k]));
                     //Limiting velocity
                     if(newVel[k] > Vmax) {newVel[k] = Vmax;}
                     else if(newVel[k] < -Vmax) {newVel[k] = -Vmax;}
@@ -93,6 +106,7 @@ public abstract class PSOProcess implements Constants{
                 if(inBounds) {
                     if(evaluateFit(newPos) < evaluateFit(pbest))
                     {
+                        secondBestPositions[i] = bestPositions[i];
                         bestPositions[i] = newPos;
                     }
                 }

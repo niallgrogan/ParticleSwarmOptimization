@@ -6,6 +6,7 @@ public class lBestPSO extends PSOProcess{
     public lBestPSO(String function) {
         fitnessFunction = new Functions(function);
         bestPositions = new double[swarmSize][fitnessFunction.dimensions];
+        secondBestPositions = new double[swarmSize][fitnessFunction.dimensions];
         globalBests = new double[swarmSize][fitnessFunction.dimensions];
     }
 

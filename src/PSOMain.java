@@ -6,8 +6,8 @@ public class PSOMain implements Constants{
     public static void main(String[] Args)
     {
         double[] results = new double[30];
-        getConvergenceData();
-//          getMeanData();
+//        getConvergenceData();
+          getMeanData();
 //        for(int i=0; i<1; i++) {
 //            lBestPSO von = new lBestPSO();
 //            von.initialise();
