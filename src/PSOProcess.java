@@ -14,6 +14,8 @@ public abstract class PSOProcess implements Constants{
     private int globalBestIndex;
     private double[] globalFitnessArray = new double[numIterations];
     private int currentSwarmSize;
+    private double fitThreshold = 1;
+    private double distThreshold = 0.1;
 
     public void initialise() {
         for(int i=0; i<initialSwarmSize; i++)
@@ -62,12 +64,20 @@ public abstract class PSOProcess implements Constants{
 
     public double[] rouletteWheel(int i) {
         double rand = new Random().nextDouble();
-        if(rand <= (double) (1/3)) {
+        if(rand <= 1.0/3.0) {
             return secondBestPositions[i];
         }
         else {
             return bestPositions[i];
         }
+    }
+
+    public double getDistDiff(double[] pos1, double[] pos2) {
+        double diff = 0;
+        for(int i=0; i<fitnessFunction.dimensions; i++) {
+            diff += Math.abs(pos1[i] - pos2[i]);
+        }
+        return diff;
     }
 
     public double[] execute() {
@@ -110,25 +120,27 @@ public abstract class PSOProcess implements Constants{
                     {
                         secondBestPositions[i] = bestPositions[i];
                         bestPositions[i] = newPos;
+
+//                        //Checking if particle should split
+//                        if(Math.abs(evaluateFit(bestPositions[i]) - evaluateFit(secondBestPositions[i])) < fitThreshold) {
+//                            if(getDistDiff(bestPositions[i], secondBestPositions[i]) > distThreshold) {
+//                                //Prevent swarm getting too big
+//                                if(currentSwarmSize < finalSwarmSize) {
+//                                    //Increment swarm size
+//                                    currentSwarmSize++;
+//                                    Particle newP = new Particle(fitnessFunction.dimensions, fitnessFunction.upperBound, fitnessFunction.lowerBound);
+//                                    //Give new particle position of old particle
+//                                    newP.setP(p.getP());
+//                                    System.out.println("New PArticles");
+//                                    //Generate new velocity using half-diff method
+//                                    swarm[currentSwarmSize-1] = p;
+//                                    bestPositions[currentSwarmSize-1] = secondBestPositions[i];
+//                                    secondBestPositions[currentSwarmSize-1] = secondBestPositions[i];
+//                                }
+//                            }
+//                        }
                     }
 
-                    //Checking if particle should split
-                    if(getFitDiff(bestPositions[i],secondBestPositions[i]) < fitThreshold) {
-                        if(getDistDiff(bestPositions[i], secondBestPositions[i]) > distThreshold) {
-                            //Prevent swarm getting too big
-                            if(currentSwarmSize < finalSwarmSize) {
-                                //Increment swarm size
-                                currentSwarmSize++;
-                                Particle newP = new Particle(fitnessFunction.dimensions, fitnessFunction.upperBound, fitnessFunction.lowerBound);
-                                //Give new particle position of old particle
-                                newP.setP(p.getP());
-                                //Generate new velocity using half-diff method
-                                swarm[currentSwarmSize-1] = p;
-                                bestPositions[currentSwarmSize-1] = secondBestPositions[i];
-                                secondBestPositions[currentSwarmSize-1] = secondBestPositions[i];
-                            }
-                        }
-                    }
                 }
             }
             for(int k=0; k<currentSwarmSize; k++)
@@ -140,6 +152,7 @@ public abstract class PSOProcess implements Constants{
             }
             findGBest();
             globalFitnessArray[j] = evaluateFit(bestPositions[globalBestIndex]);
+            System.out.println(evaluateFit(bestPositions[globalBestIndex]));
         }
         System.out.println(evaluateFit(bestPositions[globalBestIndex]));
         return globalFitnessArray;
