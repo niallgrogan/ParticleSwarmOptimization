@@ -60,7 +60,7 @@ public abstract class PSOProcess implements Constants{
 
     public double[] rouletteWheel(int i) {
         double rand = new Random().nextDouble();
-        if(rand <= (double) (1/3)) {
+        if(rand <= 1.0/3.0) {
             return secondBestPositions[i];
         }
         else {

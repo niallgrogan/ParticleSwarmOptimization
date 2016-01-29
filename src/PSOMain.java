@@ -17,19 +17,19 @@ public class PSOMain implements Constants{
 
     private static void getMeanData() {
         for (String function :functions) {
-            double[][] results = new double[3][25];
-            for(int i=0; i<25; i++) {
+            double[][] results = new double[3][3];
+            for(int i=0; i<3; i++) {
                 gBestPSO g = new gBestPSO(function);
                 g.initialise();
                 results[0][i] = g.execute()[9999];
 
-                lBestPSO l = new lBestPSO(function);
-                l.initialise();
-                results[1][i] = l.execute()[9999];
-
-                vonNeuPSO von = new vonNeuPSO(function);
-                von.initialise();
-                results[2][i] = von.execute()[9999];
+//                lBestPSO l = new lBestPSO(function);
+//                l.initialise();
+//                results[1][i] = l.execute()[9999];
+//
+//                vonNeuPSO von = new vonNeuPSO(function);
+//                von.initialise();
+//                results[2][i] = von.execute()[9999];
 
                 System.out.println(i);
             }
@@ -46,13 +46,13 @@ public class PSOMain implements Constants{
             g.initialise();
             results[0] = g.execute();
 
-            lBestPSO l = new lBestPSO(function);
-            l.initialise();
-            results[1] = l.execute();
-
-            vonNeuPSO von = new vonNeuPSO(function);
-            von.initialise();
-            results[2] = von.execute();
+//            lBestPSO l = new lBestPSO(function);
+//            l.initialise();
+//            results[1] = l.execute();
+//
+//            vonNeuPSO von = new vonNeuPSO(function);
+//            von.initialise();
+//            results[2] = von.execute();
 
             toCSVFile(results, function);
             System.out.println("Finished "+function);
@@ -75,7 +75,7 @@ public class PSOMain implements Constants{
             double[] arr1 = arrDouble[1];
             double[] arr2 = arrDouble[2];
             //Change when getting convergence data
-            for(int i=0; i<numIterations; i++)
+            for(int i=0; i<3; i++)
             {
                 sb.append(arr0[i]);
                 sb.append(", ");
