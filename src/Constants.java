@@ -3,7 +3,8 @@
  */
 public interface Constants {
     int numIterations = 10000;
-    int swarmSize = 50;
+    int initialSwarmSize = 50;
+    int finalSwarmSize = 70;
     double c1 = 2.05;
     double c2 = 2.05;
     double constriction = 0.72984;

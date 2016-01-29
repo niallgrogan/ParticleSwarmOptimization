@@ -23,13 +23,14 @@ public class PSOMain implements Constants{
                 g.initialise();
                 results[0][i] = g.execute()[9999];
 
-                lBestPSO l = new lBestPSO(function);
-                l.initialise();
-                results[1][i] = l.execute()[9999];
-
-                vonNeuPSO von = new vonNeuPSO(function);
-                von.initialise();
-                results[2][i] = von.execute()[9999];
+                //Only global topology is used for EMP
+//                lBestPSO l = new lBestPSO(function);
+//                l.initialise();
+//                results[1][i] = l.execute()[9999];
+//
+//                vonNeuPSO von = new vonNeuPSO(function);
+//                von.initialise();
+//                results[2][i] = von.execute()[9999];
 
                 System.out.println(i);
             }
@@ -46,13 +47,13 @@ public class PSOMain implements Constants{
             g.initialise();
             results[0] = g.execute();
 
-            lBestPSO l = new lBestPSO(function);
-            l.initialise();
-            results[1] = l.execute();
-
-            vonNeuPSO von = new vonNeuPSO(function);
-            von.initialise();
-            results[2] = von.execute();
+//            lBestPSO l = new lBestPSO(function);
+//            l.initialise();
+//            results[1] = l.execute();
+//
+//            vonNeuPSO von = new vonNeuPSO(function);
+//            von.initialise();
+//            results[2] = von.execute();
 
             toCSVFile(results, function);
             System.out.println("Finished "+function);
