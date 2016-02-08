@@ -6,8 +6,8 @@ public class PSOMain implements Constants{
     public static void main(String[] Args)
     {
         double[] results = new double[30];
-        getConvergenceData();
-//          getMeanData();
+//        getConvergenceData();
+          getMeanData();
 //        for(int i=0; i<1; i++) {
 //            lBestPSO von = new lBestPSO();
 //            von.initialise();
@@ -23,13 +23,13 @@ public class PSOMain implements Constants{
                 g.initialise();
                 results[0][i] = g.execute()[9999];
 
-                lBestPSO l = new lBestPSO(function);
-                l.initialise();
-                results[1][i] = l.execute()[9999];
-
-                vonNeuPSO von = new vonNeuPSO(function);
-                von.initialise();
-                results[2][i] = von.execute()[9999];
+//                lBestPSO l = new lBestPSO(function);
+//                l.initialise();
+//                results[1][i] = l.execute()[9999];
+//
+//                vonNeuPSO von = new vonNeuPSO(function);
+//                von.initialise();
+//                results[2][i] = von.execute()[9999];
 
                 System.out.println(i);
             }
@@ -62,7 +62,7 @@ public class PSOMain implements Constants{
 
     private static void toCSVFile(double[][] arrDouble, String function) {
         try {
-            BufferedWriter br = new BufferedWriter(new FileWriter(function+"Convergence.csv"));
+            BufferedWriter br = new BufferedWriter(new FileWriter(function+"Means.csv"));
             StringBuilder sb = new StringBuilder();
             sb.append("gBest");
             sb.append(", ");
@@ -75,7 +75,7 @@ public class PSOMain implements Constants{
             double[] arr1 = arrDouble[1];
             double[] arr2 = arrDouble[2];
             //Change when getting convergence data
-            for(int i=0; i<numIterations; i++)
+            for(int i=0; i<25; i++)
             {
                 sb.append(arr0[i]);
                 sb.append(", ");
