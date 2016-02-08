@@ -76,7 +76,7 @@ public class PSOMain implements Constants{
             double[] arr1 = arrDouble[1];
             double[] arr2 = arrDouble[2];
             //Change when getting convergence data
-            for(int i=0; i<numIterations; i++)
+            for(int i=0; i<25; i++)
             {
                 sb.append(arr0[i]);
                 sb.append(", ");
