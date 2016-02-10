@@ -14,8 +14,10 @@ public abstract class PSOProcess implements Constants{
     private int globalBestIndex;
     private double[] globalFitnessArray = new double[numIterations];
     private int currentSwarmSize;
-    private double fitThreshold = 0.1;
-    private double distThreshold = 0.1;
+    private double fitThreshold;
+    private double distThreshold;
+    private double alpha = 50.0;
+    private double beta = 1000.0;
 
     public void initialise() {
         for(int i=0; i<initialSwarmSize; i++)
@@ -31,6 +33,8 @@ public abstract class PSOProcess implements Constants{
             globalBests[k] = newBest;
         }
         currentSwarmSize = initialSwarmSize;
+        fitThreshold = fitnessFunction.goal/beta;
+        distThreshold = fitnessFunction.upperBound/alpha;
     }
 
     private void findGBest() {
@@ -64,13 +68,13 @@ public abstract class PSOProcess implements Constants{
     public abstract double[] findLocalGBest(int particleNumber);
 
     public double[] rouletteWheel(int i) {
-        double rand = new Random().nextDouble();
-        if(rand <= 1.0/3.0) {
-            return secondBestPositions[i];
-        }
-        else {
+//        double rand = new Random().nextDouble();
+//        if(rand <= 1.0/3.0) {
+//            return secondBestPositions[i];
+//        }
+//        else {
             return bestPositions[i];
-        }
+//        }
     }
 
     public double getDistDiff(double[] pos1, double[] pos2) {

@@ -9,5 +9,5 @@ public interface Constants {
     double c2 = 2.05;
     double constriction = 0.72984;
     double Vmax = 10000;
-    String[] functions = {"Rastrigin"};//{"Sphere", "Rosenbrock", "Ackley", "Griewank", "Rastrigin", "Schaffer(2D)", "Griewank(10D)"};
+    String[] functions = {"Sphere", "Rosenbrock", "Ackley", "Griewank", "Rastrigin", "Schaffer(2D)", "Griewank(10D)"};
 }

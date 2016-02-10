@@ -7,6 +7,7 @@ public class Functions implements Constants{
     public int dimensions;
     public double upperBound;
     public double lowerBound;
+    public double goal;
 
     public Functions(String functionName) {
         activeFunction = functionName;
@@ -14,30 +15,37 @@ public class Functions implements Constants{
             case "Sphere":  dimensions = 30;
                 upperBound = 5.12;
                 lowerBound = -5.12;
+                goal = 0.01;
                 break;
             case "Rosenbrock":  dimensions = 30;
                 upperBound = 2.048;
                 lowerBound = -2.048;
+                goal = 100;
                 break;
             case "Ackley":  dimensions = 30;
                 upperBound = 32;
                 lowerBound = -32;
+                goal = 0.01;
                 break;
             case "Griewank":  dimensions = 30;
                 upperBound = 600;
                 lowerBound = -600;
+                goal = 0.05;
                 break;
             case "Rastrigin":  dimensions = 30;
                 upperBound = 5.12;
                 lowerBound = -5.12;
+                goal = 100;
                 break;
             case "Schaffer(2D)":  dimensions = 2;
                 upperBound = 100;
                 lowerBound = -100;
+                goal = 0.00001;
                 break;
             case "Griewank(10D)":  dimensions = 10;
                 upperBound = 600;
                 lowerBound = -600;
+                goal = 0.00001;
                 break;
         }
     }
