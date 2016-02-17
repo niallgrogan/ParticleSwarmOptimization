@@ -17,11 +17,11 @@ public class PSOMain implements Constants{
 
     private static void getMeanData() {
         for (String function :functions) {
-            double[][] results = new double[3][25];
-            for(int i=0; i<25; i++) {
+            double[][] results = new double[3][1];
+            for(int i=0; i<1; i++) {
                 gBestPSO g = new gBestPSO(function);
                 g.initialise();
-                results[0][i] = g.execute()[9999];
+                results[0][i] = g.execute()[numIterations-1];
 
                 //Only global topology is used for EMP
 //                lBestPSO l = new lBestPSO(function);
@@ -34,7 +34,7 @@ public class PSOMain implements Constants{
 
                 System.out.println(i);
             }
-            toCSVFile(results, function);
+//            toCSVFile(results, function);
             System.out.println("Finished "+function);
         }
     }
@@ -76,7 +76,7 @@ public class PSOMain implements Constants{
             double[] arr1 = arrDouble[1];
             double[] arr2 = arrDouble[2];
             //Change when getting convergence data
-            for(int i=0; i<25; i++)
+            for(int i=0; i<1; i++)
             {
                 sb.append(arr0[i]);
                 sb.append(", ");

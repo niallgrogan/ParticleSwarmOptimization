@@ -16,8 +16,9 @@ public abstract class PSOProcess implements Constants{
     private int currentSwarmSize;
     private double fitThreshold;
     private double distThreshold;
-    private double alpha = 50.0;
+    private double alpha = 2000.0;
     private double beta = 1000.0;
+    private double[] diagonals = new double[numIterations];
 
     public void initialise() {
         for(int i=0; i<initialSwarmSize; i++)
@@ -34,7 +35,6 @@ public abstract class PSOProcess implements Constants{
         }
         currentSwarmSize = initialSwarmSize;
         fitThreshold = fitnessFunction.goal/beta;
-        distThreshold = fitnessFunction.upperBound/alpha;
     }
 
     private void findGBest() {
@@ -61,6 +61,20 @@ public abstract class PSOProcess implements Constants{
         return pos;
     }
 
+    public double getLongestDiagonal() {
+        double newL;
+        double L = 0;
+        for(int i=0; i<currentSwarmSize; i++) {
+            for(int j=0; j<currentSwarmSize; j++) {
+                newL = getDistDiff(swarm[i].getP(),swarm[j].getP());
+                if(newL > L) {
+                    L = newL;
+                }
+            }
+        }
+        return L;
+    }
+
     public double evaluateFit(double[] p) {
         return fitnessFunction.findFitness(p);
     }
@@ -80,7 +94,7 @@ public abstract class PSOProcess implements Constants{
     public double getDistDiff(double[] pos1, double[] pos2) {
         double diff = 0;
         for(int i=0; i<fitnessFunction.dimensions; i++) {
-            diff += Math.abs(pos1[i] - pos2[i]);
+            diff += Math.abs(pos1[i]) - Math.abs(pos2[i]);
         }
         return diff;
     }
@@ -89,9 +103,13 @@ public abstract class PSOProcess implements Constants{
 
         for (int j=0; j<numIterations; j++)
         {
+            if(j==200) {
+                double dist = getLongestDiagonal();
+                distThreshold = dist/alpha;
+            }
+
             for(int i=0; i<currentSwarmSize; i++)
             {
-
                 Particle p = swarm[i];
 
                 //Getting our pBest and gBest
@@ -126,21 +144,24 @@ public abstract class PSOProcess implements Constants{
                         secondBestPositions[i] = bestPositions[i];
                         bestPositions[i] = newPos;
 
-                        //Checking if particle should split
-                        if(Math.abs(evaluateFit(bestPositions[i]) - evaluateFit(secondBestPositions[i])) < fitThreshold) {
-                            if(getDistDiff(bestPositions[i], secondBestPositions[i]) > distThreshold) {
-                                //Prevent swarm getting too big
-                                if(currentSwarmSize < finalSwarmSize) {
-                                    //Increment swarm size
-                                    currentSwarmSize++;
-                                    Particle newP = new Particle(fitnessFunction.dimensions, fitnessFunction.upperBound, fitnessFunction.lowerBound);
-                                    //Give new particle position of old particle
-                                    newP.setP(p.getP());
+                        //Thresholds only set at j = 200 iterations
+                        if(j > 200) {
+                            //Checking if particle should split
+                            if(Math.abs(evaluateFit(bestPositions[i]) - evaluateFit(secondBestPositions[i])) < fitThreshold) {
+                                if(getDistDiff(bestPositions[i], secondBestPositions[i]) > distThreshold) {
+                                    //Prevent swarm getting too big
+                                    if(currentSwarmSize < finalSwarmSize) {
+                                        //Increment swarm size
+                                        currentSwarmSize++;
+                                        Particle newP = new Particle(fitnessFunction.dimensions, fitnessFunction.upperBound, fitnessFunction.lowerBound);
+                                        //Give new particle position of old particle
+                                        newP.setP(p.getP());
 //                                    System.out.println("New PArticles");
-                                    //Generate new velocity using half-diff method
-                                    swarm[currentSwarmSize-1] = p;
-                                    bestPositions[currentSwarmSize-1] = secondBestPositions[i];
-                                    secondBestPositions[currentSwarmSize-1] = secondBestPositions[i];
+                                        //Generate new velocity using half-diff method
+                                        swarm[currentSwarmSize-1] = p;
+                                        bestPositions[currentSwarmSize-1] = secondBestPositions[i];
+                                        secondBestPositions[currentSwarmSize-1] = secondBestPositions[i];
+                                    }
                                 }
                             }
                         }
