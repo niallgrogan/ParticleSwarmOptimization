@@ -8,5 +8,5 @@ public interface Constants {
     double constriction = 0.72984;
     double Vmax = 10000;
     String[] functions = {"Sphere", "Rosenbrock", "Ackley", "Griewank", "Rastrigin", "Schaffer(2D)", "Griewank(10D)"};
-    double[] alphaSwings = {100,500,1000,2000,3000,5000,10000,20000};
+    double[] alphaSwings = {10000,20000};//{100,500,1000,2000,3000,5000,10000,20000};
 }

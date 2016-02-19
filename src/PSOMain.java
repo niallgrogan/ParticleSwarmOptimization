@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class PSOMain implements Constants{
 
-    private static int numRuns = 2;
+    private static int numRuns = 10;
     public static void main(String[] Args)
     {
         double[] results = new double[30];
