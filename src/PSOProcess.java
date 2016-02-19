@@ -16,10 +16,10 @@ public abstract class PSOProcess implements Constants{
     private int currentSwarmSize;
     private double fitThreshold;
     private double distThreshold;
-    private double alpha = 2000.0;
+    private double alpha;
     private double beta = 1000.0;
 
-    public void initialise() {
+    public void initialise(double alphaSweep) {
         for(int i=0; i<initialSwarmSize; i++)
         {
             Particle p = new Particle(fitnessFunction.dimensions, fitnessFunction.upperBound, fitnessFunction.lowerBound);
@@ -34,6 +34,7 @@ public abstract class PSOProcess implements Constants{
         }
         currentSwarmSize = initialSwarmSize;
         fitThreshold = fitnessFunction.goal/beta;
+        alpha = alphaSweep;
     }
 
     private void findGBest() {
