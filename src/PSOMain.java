@@ -17,8 +17,8 @@ public class PSOMain implements Constants{
 
     private static void getMeanData() {
         for (String function :functions) {
-            double[][] results = new double[3][1];
-            for(int i=0; i<1; i++) {
+            double[][] results = new double[3][25];
+            for(int i=0; i<25; i++) {
                 gBestPSO g = new gBestPSO(function);
                 g.initialise();
                 results[0][i] = g.execute()[numIterations-1];
@@ -32,10 +32,12 @@ public class PSOMain implements Constants{
 //                von.initialise();
 //                results[2][i] = von.execute()[9999];
 
-                System.out.println(i);
+//                System.out.println(i);
             }
+            double average = getAverage(results[0]);
+            System.out.println("Function - "+function+"\n"+average);
 //            toCSVFile(results, function);
-            System.out.println("Finished "+function);
+//            System.out.println("Finished "+function);
         }
     }
 
@@ -91,5 +93,11 @@ public class PSOMain implements Constants{
         catch(IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static double getAverage(double[] arr) {
+        double sum =0.0;
+        for(double d : arr) sum += d;
+        return sum / (double) arr.length;
     }
 }

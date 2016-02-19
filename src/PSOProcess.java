@@ -18,7 +18,6 @@ public abstract class PSOProcess implements Constants{
     private double distThreshold;
     private double alpha = 2000.0;
     private double beta = 1000.0;
-    private double[] diagonals = new double[numIterations];
 
     public void initialise() {
         for(int i=0; i<initialSwarmSize; i++)
