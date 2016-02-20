@@ -1,6 +1,5 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -19,7 +18,7 @@ public class PSOMain implements Constants{
         for(int j=0; j<functions.length; j++) {
             String function = functions[j];
             for(int i=0; i<numRuns; i++) {
-                gBestPSO g = new gBestPSO(function);
+                vonNeuPSO g = new vonNeuPSO(function);
                 g.initialise(alpha);
                 results[j][i] = g.execute()[numIterations-1];
             }

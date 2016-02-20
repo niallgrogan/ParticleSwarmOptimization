@@ -29,7 +29,7 @@ public abstract class PSOProcess implements Constants{
         }
         for(int k=0; k<initialSwarmSize; k++)
         {
-            double[] newBest = findLocalGBest(k);
+            double[] newBest = findLocalGBest(k, currentSwarmSize);
             globalBests[k] = newBest;
         }
         currentSwarmSize = initialSwarmSize;
@@ -79,7 +79,7 @@ public abstract class PSOProcess implements Constants{
         return fitnessFunction.findFitness(p);
     }
 
-    public abstract double[] findLocalGBest(int particleNumber);
+    public abstract double[] findLocalGBest(int particleNumber, int currentSwarmSize);
 
     public double[] rouletteWheel(int i) {
 //        double rand = new Random().nextDouble();
@@ -171,7 +171,7 @@ public abstract class PSOProcess implements Constants{
             }
             for(int k=0; k<currentSwarmSize; k++)
             {
-                double[] newBest = findLocalGBest(k);
+                double[] newBest = findLocalGBest(k, currentSwarmSize);
                 if(evaluateFit(newBest) < evaluateFit(globalBests[k])) {
                     globalBests[k] = newBest;
                 }
