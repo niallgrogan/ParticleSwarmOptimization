@@ -20,7 +20,7 @@ public class lBestPSO extends PSOProcess{
             localFitnesses[1] = evaluateFit(bestPositions[0]);
             localFitnesses[2] = evaluateFit(bestPositions[1]);
 
-            int index = getMinPos(localFitnesses);
+            int index = getMinPos(localFitnesses, localFitnesses.length);
             if(index == 0) {
                 localBestIndex = currentSwarmSize-1;
             }
@@ -37,7 +37,7 @@ public class lBestPSO extends PSOProcess{
             localFitnesses[1] = evaluateFit(bestPositions[currentSwarmSize-1]);
             localFitnesses[2] = evaluateFit(bestPositions[0]);
 
-            int index = getMinPos(localFitnesses);
+            int index = getMinPos(localFitnesses, localFitnesses.length);
             if(index == 0) {
                 localBestIndex = currentSwarmSize-2;
             }
@@ -54,7 +54,7 @@ public class lBestPSO extends PSOProcess{
             localFitnesses[1] = evaluateFit(bestPositions[particleNumber]);
             localFitnesses[2] = evaluateFit(bestPositions[particleNumber + 1]);
 
-            int index = getMinPos(localFitnesses);
+            int index = getMinPos(localFitnesses, localFitnesses.length);
             if(index == 0) {
                 localBestIndex = particleNumber - 1;
             }

@@ -79,7 +79,7 @@ public class PSOMain implements Constants{
             double[] finalRow = new double[numRuns];
 
             for(int j=0; j<numRuns; j++) {
-                gBestPSO g = new gBestPSO(function);
+                lBestPSO g = new lBestPSO(function);
                 g.initialise(defaultAlpha);
                 results[j] = g.execute();
             }

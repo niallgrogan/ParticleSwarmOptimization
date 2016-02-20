@@ -22,7 +22,7 @@ public class vonNeuPSO extends PSOProcess {
             localFitnesses[3] = evaluateFit(bestPositions[currentSwarmSize-1]);
             localFitnesses[4] = evaluateFit(bestPositions[0]);
 
-            int index = getMinPos(localFitnesses);
+            int index = getMinPos(localFitnesses, localFitnesses.length);
             if(index == 0) {
                 localBestIndex = currentSwarmSize-4;
             }
@@ -46,7 +46,7 @@ public class vonNeuPSO extends PSOProcess {
             localFitnesses[3] = evaluateFit(bestPositions[0]);
             localFitnesses[4] = evaluateFit(bestPositions[1]);
 
-            int index = getMinPos(localFitnesses);
+            int index = getMinPos(localFitnesses, localFitnesses.length);
             if(index == 0) {
                 localBestIndex = currentSwarmSize-3;
             }
@@ -70,7 +70,7 @@ public class vonNeuPSO extends PSOProcess {
             localFitnesses[3] = evaluateFit(bestPositions[1]);
             localFitnesses[4] = evaluateFit(bestPositions[2]);
 
-            int index = getMinPos(localFitnesses);
+            int index = getMinPos(localFitnesses, localFitnesses.length);
             if(index == 0) {
                 localBestIndex = currentSwarmSize-2;
             }
@@ -94,7 +94,7 @@ public class vonNeuPSO extends PSOProcess {
             localFitnesses[3] = evaluateFit(bestPositions[2]);
             localFitnesses[4] = evaluateFit(bestPositions[3]);
 
-            int index = getMinPos(localFitnesses);
+            int index = getMinPos(localFitnesses, localFitnesses.length);
             if(index == 0) {
                 localBestIndex = currentSwarmSize-1;
             }
@@ -118,7 +118,7 @@ public class vonNeuPSO extends PSOProcess {
             localFitnesses[3] = evaluateFit(bestPositions[particleNumber + 1]);
             localFitnesses[4] = evaluateFit(bestPositions[particleNumber + 2]);
 
-            int index = getMinPos(localFitnesses);
+            int index = getMinPos(localFitnesses, localFitnesses.length);
             if(index == 0) {
                 localBestIndex = particleNumber - 2;
             }

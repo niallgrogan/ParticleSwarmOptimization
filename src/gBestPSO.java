@@ -16,7 +16,7 @@ public class gBestPSO extends PSOProcess {
         {
             bestFitnesses[i] = evaluateFit(bestPositions[i]);
         }
-        localBestIndex = getMinPos(bestFitnesses);
+        localBestIndex = getMinPos(bestFitnesses, currentSwarmSize);
         return bestPositions[localBestIndex];
     }
 }

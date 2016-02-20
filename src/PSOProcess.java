@@ -27,12 +27,12 @@ public abstract class PSOProcess implements Constants{
             bestPositions[i] = p.getP();
             secondBestPositions[i] = p.getP();
         }
+        currentSwarmSize = initialSwarmSize;
         for(int k=0; k<initialSwarmSize; k++)
         {
             double[] newBest = findLocalGBest(k, currentSwarmSize);
             globalBests[k] = newBest;
         }
-        currentSwarmSize = initialSwarmSize;
         fitThreshold = fitnessFunction.goal/beta;
         alpha = alphaSweep;
     }
@@ -43,14 +43,14 @@ public abstract class PSOProcess implements Constants{
             bestFitnesses[i] = evaluateFit(bestPositions[i]);
         }
 //        System.out.println(getMinPos(bestFitnesses));
-        globalBestIndex = getMinPos(bestFitnesses);
+        globalBestIndex = getMinPos(bestFitnesses, currentSwarmSize);
     }
 
-    public int getMinPos(double[] fitnesses)
+    public int getMinPos(double[] fitnesses, int numNeighbours)
     {
         int pos = 0;
         double minVal = fitnesses[0];
-        for(int i=0; i<currentSwarmSize; i++)
+        for(int i=0; i<numNeighbours; i++)
         {
             if(fitnesses[i] < minVal)
             {
