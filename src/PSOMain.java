@@ -1,38 +1,43 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class PSOMain implements Constants{
 
-    private static int numRuns = 10;
+    private static int numRuns = 3;
     public static void main(String[] Args)
     {
-        double[] results = new double[30];
-        alphaSweep();
-//        getConvergenceData();
-//          getMeanData();
-//        for(int i=0; i<1; i++) {
-//            lBestPSO von = new lBestPSO();
-//            von.initialise();
-//            von.execute();
-//        }
+//        alphaSweep();
+        runStandardTests();
+    }
+
+    private static void meanAndDevTest(double alpha, double beta) {
+        double[][] results = new double[functions.length][numRuns];
+        double[] averages = new double[functions.length];
+        for(int j=0; j<functions.length; j++) {
+            String function = functions[j];
+            for(int i=0; i<numRuns; i++) {
+                gBestPSO g = new gBestPSO(function);
+                g.initialise(alpha);
+                results[j][i] = g.execute()[numIterations-1];
+            }
+            averages[j] = getAverage(results[j]);
+            System.out.println("Function - " + function + "\n" + averages[j]);
+        }
+        toAlphaCSVFile(alpha,averages);
     }
 
     private static void alphaSweep() {
         for(double alpha :alphaSwings) {
-            double[][] results = new double[functions.length][numRuns];
-            double[] averages = new double[functions.length];
-            for(int j=0; j<functions.length; j++) {
-                String function = functions[j];
-                for(int i=0; i<numRuns; i++) {
-                    gBestPSO g = new gBestPSO(function);
-                    g.initialise(alpha);
-                    results[j][i] = g.execute()[numIterations-1];
-                }
-                averages[j] = getAverage(results[j]);
-                System.out.println("Function - " + function + "\n" + averages[j]);
-            }
-            toAlphaCSVFile(alpha,averages);
+            meanAndDevTest(alpha, defaultBeta);
+        }
+    }
+
+    private static void betaSweep() {
+        for(double beta: betaSwings) {
+            meanAndDevTest(defaultAlpha ,beta);
         }
     }
 
@@ -62,82 +67,85 @@ public class PSOMain implements Constants{
         }
     }
 
-//    private static void getMeanData() {
-//        for (String function :functions) {
-//            double[][] results = new double[3][25];
-//            for(int i=0; i<25; i++) {
-//                gBestPSO g = new gBestPSO(function);
-//                g.initialise();
-//                results[0][i] = g.execute()[numIterations-1];
-//
-//                //Only global topology is used for EMP
-////                lBestPSO l = new lBestPSO(function);
-////                l.initialise();
-////                results[1][i] = l.execute()[9999];
-////
-////                vonNeuPSO von = new vonNeuPSO(function);
-////                von.initialise();
-////                results[2][i] = von.execute()[9999];
-//
-////                System.out.println(i);
-//            }
-//            double average = getAverage(results[0]);
-//            System.out.println("Function - "+function+"\n"+average);
-////            toCSVFile(results, function);
-////            System.out.println("Finished "+function);
-//        }
-//    }
+    private static void runStandardTests() {
 
-//    private static void getConvergenceData() {
-//        for (String function :functions) {
-//            double[][] results = new double[3][numIterations];
-//
-//            gBestPSO g = new gBestPSO(function);
-//            g.initialise();
-//            results[0] = g.execute();
-//
-////            lBestPSO l = new lBestPSO(function);
-////            l.initialise();
-////            results[1] = l.execute();
-////
-////            vonNeuPSO von = new vonNeuPSO(function);
-////            von.initialise();
-////            results[2] = von.execute();
-//
-//            toCSVFile(results, function);
-//            System.out.println("Finished "+function);
-//        }
-//    }
+        double[] functionMeans = new double[functions.length];
+        double[] functionDeviations = new double[functions.length];
+        //double[] functionProportions = new double[functions.length];
 
+        int count = 0;
+        for (String function :functions) {
+            double[][] results = new double[numRuns][numIterations];
+            double[] averagedConvData = new double[numIterations];
+            double[] finalRow = new double[numRuns];
 
-    private static void toCSVFile(double[][] arrDouble, String function) {
+            for(int j=0; j<numRuns; j++) {
+                gBestPSO g = new gBestPSO(function);
+                g.initialise(defaultAlpha);
+                results[j] = g.execute();
+            }
+
+            for(int i=0; i<numIterations; i++) {
+                double[] oneRowData = new double[numRuns];
+                for(int k=0; k<numRuns; k++) {
+                    oneRowData[k] = results[k][i];
+                }
+                averagedConvData[i] = getAverage(oneRowData);
+                finalRow = oneRowData;
+            }
+            functionMeans[count] = getAverage(finalRow);
+            functionDeviations[count] = getStdDev(finalRow, functionMeans[count]);
+
+            toConvergenceFile(averagedConvData, function);
+            System.out.println("Finished "+function);
+            count++;
+        }
+        toMeanDevFile(functionMeans,functionDeviations);
+    }
+
+    private static void toMeanDevFile(double[] means, double[] devs) {
         try {
-            BufferedWriter br = new BufferedWriter(new FileWriter(function+"Convergence.csv"));
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
+            BufferedWriter br = new BufferedWriter(new FileWriter("MeanDevs_"+sdf.format(date)+".csv"));
             StringBuilder sb = new StringBuilder();
-            sb.append("gBest");
-            sb.append(", ");
-            sb.append("lBest");
-            sb.append(", ");
-            sb.append("Von Neumann");
-            sb.append(",\n");
+            for(String s : functions) {
+                sb.append(s);
+                if(s.equals("Griewank(10D)")) {
+                    sb.append(",\n");
+                }
+                else {
+                    sb.append(", ");
+                }
+            }
+            for(double m:means) {
+                sb.append(m);
+                sb.append(", ");
+            }
+            sb.append("\n");
+            for(double d:devs) {
+                sb.append(d);
+                sb.append(", ");
+            }
+            br.write(sb.toString());
+            br.close();
 
-            double[] arr0 = arrDouble[0];
-            double[] arr1 = arrDouble[1];
-            double[] arr2 = arrDouble[2];
-            //Change when getting convergence data
-            for(int i=0; i<1; i++)
-            {
-                sb.append(arr0[i]);
-                sb.append(", ");
-                sb.append(arr1[i]);
-                sb.append(", ");
-                sb.append(arr2[i]);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void toConvergenceFile(double[] averagedConvData, String function) {
+        try {
+            BufferedWriter br = new BufferedWriter(new FileWriter(function+"Convergence_Mean.csv"));
+            StringBuilder sb = new StringBuilder();
+            for(double d:averagedConvData) {
+                sb.append(d);
                 sb.append(",\n");
             }
             br.write(sb.toString());
             br.close();
-        }
-        catch(IOException e) {
+        } catch(Exception e) {
             e.printStackTrace();
         }
     }
@@ -146,5 +154,19 @@ public class PSOMain implements Constants{
         double sum =0.0;
         for(double d : arr) sum += d;
         return sum / (double) arr.length;
+    }
+
+    private static double getStdDev(double[] data, double mean)
+    {
+        double temp = 0;
+        for(double a :data)
+            temp += (mean-a)*(mean-a);
+        return Math.sqrt(temp/(double)data.length);
+    }
+
+    private static double getProportion(double[] data) {
+        //TODO: Implement a method that gets the proportion of runs
+        //that achieved the goal.
+        return 0.0;
     }
 }
