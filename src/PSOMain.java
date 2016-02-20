@@ -1,6 +1,5 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -9,62 +8,7 @@ public class PSOMain implements Constants{
     private static int numRuns = 3;
     public static void main(String[] Args)
     {
-//        alphaSweep();
         runStandardTests();
-    }
-
-    private static void meanAndDevTest(double alpha, double beta) {
-        double[][] results = new double[functions.length][numRuns];
-        double[] averages = new double[functions.length];
-        for(int j=0; j<functions.length; j++) {
-            String function = functions[j];
-            for(int i=0; i<numRuns; i++) {
-                gBestPSO g = new gBestPSO(function);
-                g.initialise(alpha);
-                results[j][i] = g.execute()[numIterations-1];
-            }
-            averages[j] = getAverage(results[j]);
-            System.out.println("Function - " + function + "\n" + averages[j]);
-        }
-        toAlphaCSVFile(alpha,averages);
-    }
-
-    private static void alphaSweep() {
-        for(double alpha :alphaSwings) {
-            meanAndDevTest(alpha, defaultBeta);
-        }
-    }
-
-    private static void betaSweep() {
-        for(double beta: betaSwings) {
-            meanAndDevTest(defaultAlpha ,beta);
-        }
-    }
-
-    private static void toAlphaCSVFile(double alpha, double[] averages) {
-        try {
-            BufferedWriter br = new BufferedWriter(new FileWriter(Double.toString(alpha)+"AlphaSweep.csv"));
-            StringBuilder sb = new StringBuilder();
-            for(String s : functions) {
-                sb.append(s);
-                if(s.equals("Griewank(10D)")) {
-                    sb.append(",\n");
-                }
-                else {
-                    sb.append(", ");
-                }
-            }
-
-            for(int i=0; i<functions.length; i++) {
-                sb.append(averages[i]);
-                sb.append(", ");
-            }
-            br.write(sb.toString());
-            br.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private static void runStandardTests() {
@@ -81,7 +25,7 @@ public class PSOMain implements Constants{
 
             for(int j=0; j<numRuns; j++) {
                 gBestPSO g = new gBestPSO(function);
-                g.initialise(defaultAlpha);
+                g.initialise();
                 results[j] = g.execute();
             }
 

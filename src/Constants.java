@@ -9,10 +9,6 @@ public interface Constants {
     double Vmax = 10000;
 
     String[] functions = {"Sphere", "Rosenbrock", "Ackley", "Griewank", "Rastrigin", "Schaffer(2D)", "Griewank(10D)"};
-    double[] alphaSwings = {100,500,1000,2000,3000,5000,10000,20000};
-    //TODO Fill beta swings
-    double[] betaSwings = {0};
-    double defaultAlpha = 2000.0;
-    double defaultBeta = 1000.0;
-
+    double alpha = 50;
+    double beta = 1000;
 }
