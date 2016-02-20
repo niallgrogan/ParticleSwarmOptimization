@@ -11,7 +11,7 @@ public class gBestPSO extends PSOProcess {
     }
 
     @Override
-    public double[] findLocalGBest(int particleNumber) {
+    public double[] findLocalGBest(int particleNumber, int currentSwarmSize) {
         for(int i=0; i<bestPositions.length; i++)
         {
             bestFitnesses[i] = evaluateFit(bestPositions[i]);

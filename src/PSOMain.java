@@ -24,7 +24,7 @@ public class PSOMain implements Constants{
             double[] finalRow = new double[numRuns];
 
             for(int j=0; j<numRuns; j++) {
-                gBestPSO g = new gBestPSO(function);
+                vonNeuPSO g = new vonNeuPSO(function);
                 g.initialise();
                 results[j] = g.execute();
             }
