@@ -5,11 +5,12 @@ import java.util.Date;
 
 public class PSOMain implements Constants{
 
-    private static int numRuns = 3;
+    private static int numRuns = 10;
     public static void main(String[] Args)
     {
 //        alphaSweep();
-        runStandardTests();
+        betaSweep();
+//        runStandardTests();
     }
 
     private static void meanAndDevTest(double alpha, double beta) {
@@ -18,14 +19,14 @@ public class PSOMain implements Constants{
         for(int j=0; j<functions.length; j++) {
             String function = functions[j];
             for(int i=0; i<numRuns; i++) {
-                vonNeuPSO g = new vonNeuPSO(function);
-                g.initialise(alpha);
+                gBestPSO g = new gBestPSO(function);
+                g.initialise(beta);
                 results[j][i] = g.execute()[numIterations-1];
             }
             averages[j] = getAverage(results[j]);
             System.out.println("Function - " + function + "\n" + averages[j]);
         }
-        toAlphaCSVFile(alpha,averages);
+        toAlphaCSVFile(beta,averages);
     }
 
     private static void alphaSweep() {
@@ -42,7 +43,7 @@ public class PSOMain implements Constants{
 
     private static void toAlphaCSVFile(double alpha, double[] averages) {
         try {
-            BufferedWriter br = new BufferedWriter(new FileWriter(Double.toString(alpha)+"AlphaSweep.csv"));
+            BufferedWriter br = new BufferedWriter(new FileWriter(Double.toString(alpha)+"BetaSweep.csv"));
             StringBuilder sb = new StringBuilder();
             for(String s : functions) {
                 sb.append(s);
