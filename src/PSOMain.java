@@ -10,16 +10,17 @@ public class PSOMain implements Constants{
     {
 //        alphaSweep();
 //        betaSweep();
+        iterationSweep();
 //        runStandardTests();
     }
 
-    private static void meanAndDevTest(double sweepComponent) {
+    private static void meanAndDevTest(int sweepComponent) {
         double[][] results = new double[functions.length][numRuns];
         double[] averages = new double[functions.length];
         for(int j=0; j<functions.length; j++) {
             String function = functions[j];
             for(int i=0; i<numRuns; i++) {
-                gBestPSO g = new gBestPSO(function);
+                lBestPSO g = new lBestPSO(function);
                 g.initialise(sweepComponent);
                 results[j][i] = g.execute()[numIterations-1];
             }
@@ -29,17 +30,17 @@ public class PSOMain implements Constants{
         toAlphaCSVFile(sweepComponent,averages);
     }
 
-    private static void alphaSweep() {
-        for(double alpha :alphaSwings) {
-            meanAndDevTest(alpha);
-        }
-    }
-
-    private static void betaSweep() {
-        for(double beta: betaSwings) {
-            meanAndDevTest(beta);
-        }
-    }
+//    private static void alphaSweep() {
+//        for(double alpha :alphaSwings) {
+//            meanAndDevTest(alpha);
+//        }
+//    }
+//
+//    private static void betaSweep() {
+//        for(double beta: betaSwings) {
+//            meanAndDevTest(beta);
+//        }
+//    }
 
     private static void iterationSweep() {
         for(int iteration:iterationSwings) {
@@ -49,7 +50,7 @@ public class PSOMain implements Constants{
 
     private static void toAlphaCSVFile(double alpha, double[] averages) {
         try {
-            BufferedWriter br = new BufferedWriter(new FileWriter(Double.toString(alpha)+"BetaSweep.csv"));
+            BufferedWriter br = new BufferedWriter(new FileWriter(Double.toString(alpha)+"IterationSweep.csv"));
             StringBuilder sb = new StringBuilder();
             for(String s : functions) {
                 sb.append(s);
@@ -87,7 +88,7 @@ public class PSOMain implements Constants{
 
             for(int j=0; j<numRuns; j++) {
                 lBestPSO g = new lBestPSO(function);
-                g.initialise(defaultAlpha);
+                //g.initialise(defaultAlpha);
                 results[j] = g.execute();
             }
 
