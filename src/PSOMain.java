@@ -9,35 +9,41 @@ public class PSOMain implements Constants{
     public static void main(String[] Args)
     {
 //        alphaSweep();
-        betaSweep();
+//        betaSweep();
 //        runStandardTests();
     }
 
-    private static void meanAndDevTest(double alpha, double beta) {
+    private static void meanAndDevTest(double sweepComponent) {
         double[][] results = new double[functions.length][numRuns];
         double[] averages = new double[functions.length];
         for(int j=0; j<functions.length; j++) {
             String function = functions[j];
             for(int i=0; i<numRuns; i++) {
                 gBestPSO g = new gBestPSO(function);
-                g.initialise(beta);
+                g.initialise(sweepComponent);
                 results[j][i] = g.execute()[numIterations-1];
             }
             averages[j] = getAverage(results[j]);
             System.out.println("Function - " + function + "\n" + averages[j]);
         }
-        toAlphaCSVFile(beta,averages);
+        toAlphaCSVFile(sweepComponent,averages);
     }
 
     private static void alphaSweep() {
         for(double alpha :alphaSwings) {
-            meanAndDevTest(alpha, defaultBeta);
+            meanAndDevTest(alpha);
         }
     }
 
     private static void betaSweep() {
         for(double beta: betaSwings) {
-            meanAndDevTest(defaultAlpha ,beta);
+            meanAndDevTest(beta);
+        }
+    }
+
+    private static void iterationSweep() {
+        for(int iteration:iterationSwings) {
+            meanAndDevTest(iteration);
         }
     }
 
