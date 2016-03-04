@@ -24,7 +24,7 @@ public class PSOMain implements Constants{
             double[] finalRow = new double[numRuns];
 
             for(int j=0; j<numRuns; j++) {
-                lBestPSO g = new lBestPSO(function);
+                gBestPSO g = new gBestPSO(function);
                 g.initialise();
                 results[j] = g.execute();
             }
@@ -37,6 +37,7 @@ public class PSOMain implements Constants{
                 averagedConvData[i] = getAverage(oneRowData);
                 finalRow = oneRowData;
             }
+            toDataFile(finalRow, function);
             functionMeans[count] = getAverage(finalRow);
             functionDeviations[count] = getStdDev(finalRow, functionMeans[count]);
             functionProportions[count] = getProportion(finalRow, function);
@@ -46,6 +47,20 @@ public class PSOMain implements Constants{
             count++;
         }
         toMeanDevFile(functionMeans,functionDeviations, functionProportions);
+    }
+
+    private static void toDataFile(double[] results, String function) {
+        try {
+            BufferedWriter br = new BufferedWriter(new FileWriter("Results "+function+".csv"));
+            StringBuilder sb = new StringBuilder();
+            for(double r:results) {
+                sb.append(r);
+                sb.append(",\n");
+            }
+            br.write(sb.toString());
+            br.close();
+        }
+        catch (Exception e) {}
     }
 
     private static void toMeanDevFile(double[] means, double[] devs, double[] proportions) {
