@@ -95,7 +95,9 @@ public abstract class PSOProcess implements Constants{
     public double getDistDiff(double[] pos1, double[] pos2) {
         double diff = 0;
         for(int i=0; i<fitnessFunction.dimensions; i++) {
-            diff += Math.abs(pos1[i]) - Math.abs(pos2[i]);
+            //TODO - Find out which of these is better
+//            diff += Math.abs(pos1[i]) - Math.abs(pos2[i]);
+            diff += Math.abs(pos1[i] - pos2[i]);
         }
         return diff;
     }
@@ -148,7 +150,7 @@ public abstract class PSOProcess implements Constants{
                         //Thresholds only set at j = 200 iterations
                         if(j > 200) {
                             //Checking if particle should split
-                            if(Math.abs(evaluateFit(bestPositions[i]) - evaluateFit(secondBestPositions[i])) < fitThreshold) {
+                            if (Math.abs(evaluateFit(bestPositions[i]) - evaluateFit(secondBestPositions[i])) < fitThreshold) {
                                 if(getDistDiff(bestPositions[i], secondBestPositions[i]) > distThreshold) {
                                     //Prevent swarm getting too big
                                     if(currentSwarmSize < finalSwarmSize) {
