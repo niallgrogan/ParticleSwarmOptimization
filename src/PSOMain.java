@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class PSOMain implements Constants{
 
-    private static int numRuns = 3;
+    private static int numRuns = 25;
     public static void main(String[] Args)
     {
         runStandardTests();
@@ -15,7 +15,7 @@ public class PSOMain implements Constants{
 
         double[] functionMeans = new double[functions.length];
         double[] functionDeviations = new double[functions.length];
-        //double[] functionProportions = new double[functions.length];
+        double[] functionProportions = new double[functions.length];
 
         int count = 0;
         for (String function :functions) {
@@ -24,7 +24,7 @@ public class PSOMain implements Constants{
             double[] finalRow = new double[numRuns];
 
             for(int j=0; j<numRuns; j++) {
-                lBestPSO g = new lBestPSO(function);
+                gBestPSO g = new gBestPSO(function);
                 g.initialise();
                 results[j] = g.execute();
             }
@@ -39,15 +39,16 @@ public class PSOMain implements Constants{
             }
             functionMeans[count] = getAverage(finalRow);
             functionDeviations[count] = getStdDev(finalRow, functionMeans[count]);
+            functionProportions[count] = getProportion(finalRow, function);
 
             toConvergenceFile(averagedConvData, function);
             System.out.println("Finished "+function);
             count++;
         }
-        toMeanDevFile(functionMeans,functionDeviations);
+        toMeanDevFile(functionMeans,functionDeviations, functionProportions);
     }
 
-    private static void toMeanDevFile(double[] means, double[] devs) {
+    private static void toMeanDevFile(double[] means, double[] devs, double[] proportions) {
         try {
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
@@ -69,6 +70,11 @@ public class PSOMain implements Constants{
             sb.append("\n");
             for(double d:devs) {
                 sb.append(d);
+                sb.append(", ");
+            }
+            sb.append("\n");
+            for(double p:proportions) {
+                sb.append(p);
                 sb.append(", ");
             }
             br.write(sb.toString());
@@ -108,9 +114,32 @@ public class PSOMain implements Constants{
         return Math.sqrt(temp/(double)data.length);
     }
 
-    private static double getProportion(double[] data) {
-        //TODO: Implement a method that gets the proportion of runs
-        //that achieved the goal.
-        return 0.0;
+    private static double getProportion(double[] data, String function) {
+        double goal;
+        double numCorrect = 0.0;
+        switch (function) {
+            case "Sphere": goal = 0.01;
+                break;
+            case "Rosenbrock": goal = 100;
+                break;
+            case "Ackley": goal = 0.01;
+                break;
+            case "Griewank": goal = 0.05;
+                break;
+            case "Rastrigin": goal = 100;
+                break;
+            case "Schaffer(2D)": goal = 0.00001;
+                break;
+            case "Griewank(10D)": goal = 0.05;
+                break;
+            default: goal = 0.0;
+        }
+        for(double d:data) {
+            if(d <= goal) {
+                numCorrect++;
+            }
+        }
+        return numCorrect/numRuns;
     }
 }
+

@@ -45,7 +45,7 @@ public class Functions implements Constants{
             case "Griewank(10D)":  dimensions = 10;
                 upperBound = 600;
                 lowerBound = -600;
-                goal = 0.00001;
+                goal = 0.05;
                 break;
         }
     }
