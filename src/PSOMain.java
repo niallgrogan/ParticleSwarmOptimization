@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class PSOMain implements Constants{
 
-    private static int numRuns = 10;
+    private static int numRuns = 25;
     public static void main(String[] Args)
     {
         runStandardTests();
