@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class PSOMain implements Constants{
 
-    private static int numRuns = 10;
+    private static int numRuns = 25;
     public static void main(String[] Args)
     {
 //        alphaSweep();
@@ -20,7 +20,7 @@ public class PSOMain implements Constants{
         for(int j=0; j<functions.length; j++) {
             String function = functions[j];
             for(int i=0; i<numRuns; i++) {
-                lBestPSO g = new lBestPSO(function);
+                gBestPSO g = new gBestPSO(function);
                 g.initialise(sweepComponent);
                 results[j][i] = g.execute()[numIterations-1];
             }
