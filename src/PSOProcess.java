@@ -18,9 +18,9 @@ public abstract class PSOProcess implements Constants{
     private double distThreshold;
     private double alpha = defaultAlpha;
     private double beta = defaultBeta;
-    private int evaluationIteration;
+    private int evaluationIteration = 200;
 
-    public void initialise(int sweepComponent) {
+    public void initialise() {
         for(int i=0; i<initialSwarmSize; i++)
         {
             Particle p = new Particle(fitnessFunction.dimensions, fitnessFunction.upperBound, fitnessFunction.lowerBound);
@@ -35,7 +35,6 @@ public abstract class PSOProcess implements Constants{
             globalBests[k] = newBest;
         }
         fitThreshold = fitnessFunction.goal/beta;
-        evaluationIteration = sweepComponent;
     }
 
     private void findGBest() {

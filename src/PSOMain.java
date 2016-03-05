@@ -8,77 +8,14 @@ public class PSOMain implements Constants{
     private static int numRuns = 25;
     public static void main(String[] Args)
     {
-//        alphaSweep();
-//        betaSweep();
-        iterationSweep();
-//        runStandardTests();
-    }
-
-    private static void meanAndDevTest(int sweepComponent) {
-        double[][] results = new double[functions.length][numRuns];
-        double[] averages = new double[functions.length];
-        for(int j=0; j<functions.length; j++) {
-            String function = functions[j];
-            for(int i=0; i<numRuns; i++) {
-                gBestPSO g = new gBestPSO(function);
-                g.initialise(sweepComponent);
-                results[j][i] = g.execute()[numIterations-1];
-            }
-            averages[j] = getAverage(results[j]);
-            System.out.println("Function - " + function + "\n" + averages[j]);
-        }
-        toAlphaCSVFile(sweepComponent,averages);
-    }
-
-//    private static void alphaSweep() {
-//        for(double alpha :alphaSwings) {
-//            meanAndDevTest(alpha);
-//        }
-//    }
-//
-//    private static void betaSweep() {
-//        for(double beta: betaSwings) {
-//            meanAndDevTest(beta);
-//        }
-//    }
-
-    private static void iterationSweep() {
-        for(int iteration:iterationSwings) {
-            meanAndDevTest(iteration);
-        }
-    }
-
-    private static void toAlphaCSVFile(double alpha, double[] averages) {
-        try {
-            BufferedWriter br = new BufferedWriter(new FileWriter(Double.toString(alpha)+"IterationSweep.csv"));
-            StringBuilder sb = new StringBuilder();
-            for(String s : functions) {
-                sb.append(s);
-                if(s.equals("Griewank(10D)")) {
-                    sb.append(",\n");
-                }
-                else {
-                    sb.append(", ");
-                }
-            }
-
-            for(int i=0; i<functions.length; i++) {
-                sb.append(averages[i]);
-                sb.append(", ");
-            }
-            br.write(sb.toString());
-            br.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        runStandardTests();
     }
 
     private static void runStandardTests() {
 
         double[] functionMeans = new double[functions.length];
         double[] functionDeviations = new double[functions.length];
-        //double[] functionProportions = new double[functions.length];
+        double[] functionProportions = new double[functions.length];
 
         int count = 0;
         for (String function :functions) {
@@ -87,8 +24,8 @@ public class PSOMain implements Constants{
             double[] finalRow = new double[numRuns];
 
             for(int j=0; j<numRuns; j++) {
-                lBestPSO g = new lBestPSO(function);
-                //g.initialise(defaultAlpha);
+                gBestPSO g = new gBestPSO(function);
+                g.initialise();
                 results[j] = g.execute();
             }
 
@@ -100,17 +37,33 @@ public class PSOMain implements Constants{
                 averagedConvData[i] = getAverage(oneRowData);
                 finalRow = oneRowData;
             }
+            toDataFile(finalRow, function);
             functionMeans[count] = getAverage(finalRow);
             functionDeviations[count] = getStdDev(finalRow, functionMeans[count]);
+            functionProportions[count] = getProportion(finalRow, function);
 
             toConvergenceFile(averagedConvData, function);
             System.out.println("Finished "+function);
             count++;
         }
-        toMeanDevFile(functionMeans,functionDeviations);
+        toMeanDevFile(functionMeans,functionDeviations, functionProportions);
     }
 
-    private static void toMeanDevFile(double[] means, double[] devs) {
+    private static void toDataFile(double[] results, String function) {
+        try {
+            BufferedWriter br = new BufferedWriter(new FileWriter("Results "+function+".csv"));
+            StringBuilder sb = new StringBuilder();
+            for(double r:results) {
+                sb.append(r);
+                sb.append(",\n");
+            }
+            br.write(sb.toString());
+            br.close();
+        }
+        catch (Exception e) {}
+    }
+
+    private static void toMeanDevFile(double[] means, double[] devs, double[] proportions) {
         try {
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
@@ -132,6 +85,11 @@ public class PSOMain implements Constants{
             sb.append("\n");
             for(double d:devs) {
                 sb.append(d);
+                sb.append(", ");
+            }
+            sb.append("\n");
+            for(double p:proportions) {
+                sb.append(p);
                 sb.append(", ");
             }
             br.write(sb.toString());
@@ -171,9 +129,31 @@ public class PSOMain implements Constants{
         return Math.sqrt(temp/(double)data.length);
     }
 
-    private static double getProportion(double[] data) {
-        //TODO: Implement a method that gets the proportion of runs
-        //that achieved the goal.
-        return 0.0;
+    private static double getProportion(double[] data, String function) {
+        double goal;
+        double numCorrect = 0.0;
+        switch (function) {
+            case "Sphere": goal = 0.01;
+                break;
+            case "Rosenbrock": goal = 100;
+                break;
+            case "Ackley": goal = 0.01;
+                break;
+            case "Griewank": goal = 0.05;
+                break;
+            case "Rastrigin": goal = 100;
+                break;
+            case "Schaffer(2D)": goal = 0.00001;
+                break;
+            case "Griewank(10D)": goal = 0.05;
+                break;
+            default: goal = 0.0;
+        }
+        for(double d:data) {
+            if(d <= goal) {
+                numCorrect++;
+            }
+        }
+        return numCorrect/numRuns;
     }
 }
