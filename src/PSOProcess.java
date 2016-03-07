@@ -19,7 +19,7 @@ public abstract class PSOProcess implements Constants{
     private double distThreshold;
     private double alpha = defaultAlpha;
     private double beta = defaultBeta;
-    private int evaluationIteration = 50;
+    private int evaluationIteration = 2;
 
     public void initialise() {
         for(int i=0; i<initialSwarmSize; i++)
@@ -85,13 +85,15 @@ public abstract class PSOProcess implements Constants{
 
     public double[] rouletteWheel(int i) {
 //        double rand = new Random().nextDouble();
-//        if(rand <= 1.0/3.0) {
+//        if(rand <= 1.0/7.0) {
+//            return thirdBestPositions[i];
+//        }
+//        else if (rand <= 3.0/7.0){
 //            return secondBestPositions[i];
 //        }
 //        else {
             return bestPositions[i];
 //        }
-        //TODO - implement 3rd best position
     }
 
     public double getDistDiff(double[] pos1, double[] pos2) {
@@ -170,23 +172,23 @@ public abstract class PSOProcess implements Constants{
                                     }
                                 }
                             }
-//                            else if (Math.abs(evaluateFit(bestPositions[i]) - evaluateFit(thirdBestPositions[i])) < fitThreshold) {
-//                                if(getDistDiff(bestPositions[i], thirdBestPositions[i]) > distThreshold) {
-//                                    //Prevent swarm getting too big
-//                                    if(currentSwarmSize < finalSwarmSize) {
-//                                        //Increment swarm size
-//                                        currentSwarmSize++;
-//                                        Particle newP = new Particle(fitnessFunction.dimensions, fitnessFunction.upperBound, fitnessFunction.lowerBound);
-//                                        //Give new particle position of old particle
-//                                        newP.setP(p.getP());
-////                                    System.out.println("New PArticles");
-//                                        //Generate new velocity using half-diff method
-//                                        swarm[currentSwarmSize-1] = p;
-//                                        bestPositions[currentSwarmSize-1] = thirdBestPositions[i];
-//                                        thirdBestPositions[currentSwarmSize-1] = thirdBestPositions[i];
-//                                    }
-//                                }
-//                            }
+                            else if (Math.abs(evaluateFit(bestPositions[i]) - evaluateFit(thirdBestPositions[i])) < fitThreshold) {
+                                if(getDistDiff(bestPositions[i], thirdBestPositions[i]) > distThreshold) {
+                                    //Prevent swarm getting too big
+                                    if(currentSwarmSize < finalSwarmSize) {
+                                        //Increment swarm size
+                                        currentSwarmSize++;
+                                        Particle newP = new Particle(fitnessFunction.dimensions, fitnessFunction.upperBound, fitnessFunction.lowerBound);
+                                        //Give new particle position of old particle
+                                        newP.setP(p.getP());
+//                                    System.out.println("New PArticles");
+                                        //Generate new velocity using half-diff method
+                                        swarm[currentSwarmSize-1] = p;
+                                        bestPositions[currentSwarmSize-1] = thirdBestPositions[i];
+                                        thirdBestPositions[currentSwarmSize-1] = thirdBestPositions[i];
+                                    }
+                                }
+                            }
                         }
                     }
 
