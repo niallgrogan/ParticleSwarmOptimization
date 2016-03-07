@@ -106,6 +106,7 @@ public abstract class PSOProcess implements Constants{
             }
             findGBest();
             globalFitnessArray[j] = evaluateFit(bestPositions[globalBestIndex]);
+//            System.out.println(evaluateFit(bestPositions[globalBestIndex]));
         }
         System.out.println(evaluateFit(bestPositions[globalBestIndex]));
         return globalFitnessArray;
