@@ -145,7 +145,7 @@ public abstract class PSOProcess implements Constants{
                 p.setP(newPos);
                 p.setV(newVel);
 
-                if(inBounds) {
+//                if(inBounds) {
                     if(evaluateFit(newPos) < evaluateFit(pbest))
                     {
                         thirdBestPositions[i] = secondBestPositions[i];
@@ -192,7 +192,7 @@ public abstract class PSOProcess implements Constants{
                         }
                     }
 
-                }
+//                }
             }
             for(int k=0; k<currentSwarmSize; k++)
             {

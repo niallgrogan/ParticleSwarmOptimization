@@ -47,6 +47,13 @@ public class Functions implements Constants{
                 lowerBound = -600;
                 goal = 0.05;
                 break;
+            case "f1": dimensions = 30;
+                upperBound = 100;
+                lowerBound = -100;
+                break;
+            case "f9": dimensions = 30;
+                upperBound = 5;
+                lowerBound = -5;
         }
     }
 
@@ -105,6 +112,22 @@ public class Functions implements Constants{
                                     }
                                     //May be a problem dividing double by int
                                     fitness = (sum - product + 1.0);
+                break;
+            //Not sure if anything below working correctly
+            case "f1":
+                for (int i=0; i<dimensions; i++)
+                {
+                    fitness = fitness + Math.pow((p[i] - 450.0),2);
+                }
+                fitness = fitness - 450.0;
+                break;
+            case "f9":
+                for (int i=0; i<dimensions; i++)
+                {
+                    sum += (p[i]*p[i] - 10.0*Math.cos(2*Math.PI*p[i]));
+                }
+                fitness = 10*dimensions + sum;
+                fitness = fitness - 330;
                 break;
         }
         return fitness;
