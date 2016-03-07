@@ -37,12 +37,12 @@ public class PSOMain implements Constants{
                 averagedConvData[i] = getAverage(oneRowData);
                 finalRow = oneRowData;
             }
-            toDataFile(finalRow, function);
+//            toDataFile(finalRow, function);
             functionMeans[count] = getAverage(finalRow);
             functionDeviations[count] = getStdDev(finalRow, functionMeans[count]);
             functionProportions[count] = getProportion(finalRow, function);
 
-            toConvergenceFile(averagedConvData, function);
+//            toConvergenceFile(averagedConvData, function);
             System.out.println("Finished "+function);
             count++;
         }

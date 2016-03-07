@@ -90,12 +90,12 @@ public abstract class PSOProcess implements Constants{
                 p.setP(newPos);
                 p.setV(newVel);
 
-                if(inBounds) {
+//                if(inBounds) {
                     if(evaluateFit(newPos) < evaluateFit(pbest))
                     {
                         bestPositions[i] = newPos;
                     }
-                }
+//                }
             }
             for(int k=0; k<swarmSize; k++)
             {
