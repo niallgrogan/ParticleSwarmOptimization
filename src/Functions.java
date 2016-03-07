@@ -109,13 +109,15 @@ public class Functions implements Constants{
                             fitness = fitness + Math.pow((p[i] - 450.0),2);
                         }
                         fitness = fitness - 450.0;
+                        break;
             case "f9":
                 for (int i=0; i<dimensions; i++)
                 {
                     sum += (p[i]*p[i] - 10.0*Math.cos(2*Math.PI*p[i]));
                 }
                 fitness = 10*dimensions + sum;
-                return fitness - 330;
+                fitness = fitness - 330;
+                break;
         }
         return fitness;
 
