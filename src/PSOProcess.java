@@ -8,6 +8,7 @@ public abstract class PSOProcess implements Constants{
     Particle[] swarm = new Particle[finalSwarmSize];
     public double[][] bestPositions;
     public double[][] secondBestPositions;
+    public double[][] thirdBestPositions;
     public double[][] globalBests;
     public double[] bestFitnesses = new double[finalSwarmSize];
     public int localBestIndex;
@@ -18,7 +19,7 @@ public abstract class PSOProcess implements Constants{
     private double distThreshold;
     private double alpha = defaultAlpha;
     private double beta = defaultBeta;
-    private int evaluationIteration = 200;
+    private int evaluationIteration = 50;
 
     public void initialise() {
         for(int i=0; i<initialSwarmSize; i++)
@@ -27,6 +28,7 @@ public abstract class PSOProcess implements Constants{
             swarm[i] = p;
             bestPositions[i] = p.getP();
             secondBestPositions[i] = p.getP();
+            thirdBestPositions[i] = p.getP();
         }
         currentSwarmSize = initialSwarmSize;
         for(int k=0; k<initialSwarmSize; k++)
@@ -82,13 +84,14 @@ public abstract class PSOProcess implements Constants{
     public abstract double[] findLocalGBest(int particleNumber, int currentSwarmSize);
 
     public double[] rouletteWheel(int i) {
-        double rand = new Random().nextDouble();
-        if(rand <= 1.0/3.0) {
-            return secondBestPositions[i];
-        }
-        else {
+//        double rand = new Random().nextDouble();
+//        if(rand <= 1.0/3.0) {
+//            return secondBestPositions[i];
+//        }
+//        else {
             return bestPositions[i];
-        }
+//        }
+        //TODO - implement 3rd best position
     }
 
     public double getDistDiff(double[] pos1, double[] pos2) {
@@ -143,11 +146,12 @@ public abstract class PSOProcess implements Constants{
                 if(inBounds) {
                     if(evaluateFit(newPos) < evaluateFit(pbest))
                     {
+                        thirdBestPositions[i] = secondBestPositions[i];
                         secondBestPositions[i] = bestPositions[i];
                         bestPositions[i] = newPos;
 
                         //Thresholds only set at j = 200 iterations
-                        if(j > 200) {
+                        if(j > evaluationIteration) {
                             //Checking if particle should split
                             if (Math.abs(evaluateFit(bestPositions[i]) - evaluateFit(secondBestPositions[i])) < fitThreshold) {
                                 if(getDistDiff(bestPositions[i], secondBestPositions[i]) > distThreshold) {
@@ -166,6 +170,23 @@ public abstract class PSOProcess implements Constants{
                                     }
                                 }
                             }
+//                            else if (Math.abs(evaluateFit(bestPositions[i]) - evaluateFit(thirdBestPositions[i])) < fitThreshold) {
+//                                if(getDistDiff(bestPositions[i], thirdBestPositions[i]) > distThreshold) {
+//                                    //Prevent swarm getting too big
+//                                    if(currentSwarmSize < finalSwarmSize) {
+//                                        //Increment swarm size
+//                                        currentSwarmSize++;
+//                                        Particle newP = new Particle(fitnessFunction.dimensions, fitnessFunction.upperBound, fitnessFunction.lowerBound);
+//                                        //Give new particle position of old particle
+//                                        newP.setP(p.getP());
+////                                    System.out.println("New PArticles");
+//                                        //Generate new velocity using half-diff method
+//                                        swarm[currentSwarmSize-1] = p;
+//                                        bestPositions[currentSwarmSize-1] = thirdBestPositions[i];
+//                                        thirdBestPositions[currentSwarmSize-1] = thirdBestPositions[i];
+//                                    }
+//                                }
+//                            }
                         }
                     }
 
