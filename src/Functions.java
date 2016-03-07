@@ -54,6 +54,7 @@ public class Functions implements Constants{
             case "f9": dimensions = 30;
                 upperBound = 5;
                 lowerBound = -5;
+                break;
         }
     }
 
