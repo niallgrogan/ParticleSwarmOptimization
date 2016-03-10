@@ -7,7 +7,6 @@ public class vonNeuPSO extends PSOProcess {
         fitnessFunction = new Functions(function);
         bestPositions = new double[finalSwarmSize][fitnessFunction.dimensions];
         secondBestPositions = new double[finalSwarmSize][fitnessFunction.dimensions];
-        thirdBestPositions = new double[finalSwarmSize][fitnessFunction.dimensions];
         globalBests = new double[finalSwarmSize][fitnessFunction.dimensions];
     }
 
