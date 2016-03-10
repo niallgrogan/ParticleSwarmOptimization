@@ -1,6 +1,3 @@
-/**
- * Created by Niall on 12/01/2016.
- */
 public class vonNeuPSO extends PSOProcess {
 
     public vonNeuPSO(String function) {

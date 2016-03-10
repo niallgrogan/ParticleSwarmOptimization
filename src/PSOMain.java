@@ -16,23 +16,42 @@ public class PSOMain implements Constants{
         double[] functionMeans = new double[functions.length];
         double[] functionDeviations = new double[functions.length];
         double[] functionProportions = new double[functions.length];
+        boolean ParticleAdded1 = false;
+        boolean ParticleAdded2 = false;
 
         int count = 0;
         for (String function :functions) {
-            double[][] results = new double[numRuns][numIterations];
+            double[][] results1 = new double[numRuns][numIterations];
+            double[][] results2 = new double[numRuns][numIterations];
             double[] averagedConvData = new double[numIterations];
             double[] finalRow = new double[numRuns];
 
             for(int j=0; j<numRuns; j++) {
-                gBestPSO g = new gBestPSO(function);
-                g.initialise();
-                results[j] = g.execute();
+                gBestPSO swarm1 = new gBestPSO(function);
+                swarm1.initialise();
+
+                gBestPSO swarm2 = new gBestPSO(function);
+                swarm2.initialise();
+
+                for(int i=0; i<numIterations; i++) {
+
+                    ParticleAdded1 = swarm1.execute(i);
+                    if(ParticleAdded1) {
+                        swarm2.removeWorstParticle;
+                    }
+                    ParticleAdded2 = swarm2.execute(i);
+                    if(ParticleAdded2) {
+                        swarm1.removeWorstParticle;
+                    }
+                }
+                results1[j] = swarm1.globalFitnessArray;
+                results2[j] = swarm2.globalFitnessArray;
             }
 
             for(int i=0; i<numIterations; i++) {
                 double[] oneRowData = new double[numRuns];
                 for(int k=0; k<numRuns; k++) {
-                    oneRowData[k] = results[k][i];
+                    oneRowData[k] = results1[k][i];
                 }
                 averagedConvData[i] = getAverage(oneRowData);
                 finalRow = oneRowData;
