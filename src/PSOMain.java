@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class PSOMain implements Constants{
 
-    private static int numRuns = 25;
+    private static int numRuns = 3;
     public static void main(String[] Args)
     {
         runStandardTests();
@@ -36,14 +36,15 @@ public class PSOMain implements Constants{
                 for(int i=0; i<numIterations; i++) {
 
                     ParticleAdded1 = swarm1.execute(i);
-//                    if(ParticleAdded1) {
-//                        swarm2.removeWorstParticle();
-//                    }
-                    //ParticleAdded2 = swarm2.execute(i);
-//                    if(ParticleAdded2) {
-//                        swarm1.removeWorstParticle();
-//                    }
+                    if(ParticleAdded1) {
+                        swarm2.removeWorstParticle();
+                    }
+                    ParticleAdded2 = swarm2.execute(i);
+                    if(ParticleAdded2) {
+                        swarm1.removeWorstParticle();
+                    }
                 }
+                System.out.println("***");
                 results1[j] = swarm1.globalFitnessArray;
                 results2[j] = swarm2.globalFitnessArray;
             }

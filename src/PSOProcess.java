@@ -170,7 +170,9 @@ public abstract class PSOProcess implements Constants{
                                     Particle newP = new Particle(fitnessFunction.dimensions, fitnessFunction.upperBound, fitnessFunction.lowerBound);
                                     newP.setP(p.getP());
                                     //TODO - Figure this out
-                                    swarm.add(currentSwarmSize,p);
+                                    swarm.add(currentSwarmSize,newP);
+                                    double[] bestNeighbour = findLocalGBest(currentSwarmSize, currentSwarmSize);
+                                    newP.setNeighbourhoodBest(bestNeighbour);
                                     newP.setBestPosition(p.getSecondBestPosition());
                                     newP.setSecondBestPosition(p.getSecondBestPosition());
                                     addedParticle = true;
