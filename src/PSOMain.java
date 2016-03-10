@@ -36,13 +36,13 @@ public class PSOMain implements Constants{
                 for(int i=0; i<numIterations; i++) {
 
                     ParticleAdded1 = swarm1.execute(i);
-                    if(ParticleAdded1) {
-                        swarm2.removeWorstParticle();
-                    }
-                    ParticleAdded2 = swarm2.execute(i);
-                    if(ParticleAdded2) {
-                        swarm1.removeWorstParticle();
-                    }
+//                    if(ParticleAdded1) {
+//                        swarm2.removeWorstParticle();
+//                    }
+                    //ParticleAdded2 = swarm2.execute(i);
+//                    if(ParticleAdded2) {
+//                        swarm1.removeWorstParticle();
+//                    }
                 }
                 results1[j] = swarm1.globalFitnessArray;
                 results2[j] = swarm2.globalFitnessArray;

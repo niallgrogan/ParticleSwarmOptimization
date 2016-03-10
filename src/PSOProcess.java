@@ -7,11 +7,7 @@ public abstract class PSOProcess implements Constants{
 
     public Functions fitnessFunction;
     //May want to add an initial capacity here
-    ArrayList<Particle> swarm = new ArrayList<>();
-    public double[][] bestPositions;
-    public double[][] secondBestPositions;
-    public double[][] globalBests;
-    public double[] bestFitnesses = new double[finalSwarmSize];
+    ArrayList<Particle> swarm;
     public int localBestIndex;
     private int globalBestIndex;
     private int globalWorstIndex;
@@ -29,24 +25,22 @@ public abstract class PSOProcess implements Constants{
         {
             Particle p = new Particle(fitnessFunction.dimensions, fitnessFunction.upperBound, fitnessFunction.lowerBound);
             swarm.add(p);
-            bestPositions[i] = p.getP();
-            secondBestPositions[i] = p.getP();
         }
         currentSwarmSize = initialSwarmSize;
         for(int k=0; k<initialSwarmSize; k++)
         {
             double[] newBest = findLocalGBest(k, currentSwarmSize);
-            globalBests[k] = newBest;
+            swarm.get(k).setNeighbourhoodBest(newBest);
         }
         fitThreshold = fitnessFunction.goal/beta;
     }
 
     private void findGBest() {
+        double[] bestFitnesses = new double[currentSwarmSize];
         for(int i=0; i<currentSwarmSize; i++)
         {
-            bestFitnesses[i] = evaluateFit(bestPositions[i]);
+            bestFitnesses[i] = evaluateFit(swarm.get(i).getBestPosition());
         }
-//        System.out.println(getMinPos(bestFitnesses));
         globalBestIndex = getMinPos(bestFitnesses, currentSwarmSize);
         globalWorstIndex = getMaxPos(bestFitnesses, currentSwarmSize);
     }
@@ -107,7 +101,7 @@ public abstract class PSOProcess implements Constants{
 //            return thirdBestPositions[i];
 //        }
 //        else {
-            return bestPositions[i];
+            return swarm.get(i).getBestPosition();
 //        }
     }
 
@@ -141,8 +135,8 @@ public abstract class PSOProcess implements Constants{
         {
             Particle p = swarm.get(i);
 
-            double[] pbest = bestPositions[i];
-            double[] gbest = globalBests[i];
+            double[] pbest = p.getBestPosition();
+            double[] gbest = p.getNeighbourhoodBest();
             double[] empTerm = rouletteWheel(i);
             double[] newVel = new double[fitnessFunction.dimensions];
             double[] newPos = new double[fitnessFunction.dimensions];
@@ -166,20 +160,21 @@ public abstract class PSOProcess implements Constants{
             if(inBounds) {
                 if(evaluateFit(newPos) < evaluateFit(pbest))
                 {
-                    secondBestPositions[i] = bestPositions[i];
-                    bestPositions[i] = newPos;
+                    p.setSecondBestPosition(p.getBestPosition());
+                    p.setBestPosition(newPos);
 
                     if(iteration > evaluationIteration) {
-                        if (Math.abs(evaluateFit(bestPositions[i]) - evaluateFit(secondBestPositions[i])) < fitThreshold) {
-                            if(getDistDiff(bestPositions[i], secondBestPositions[i]) > distThreshold) {
+                        if (Math.abs(evaluateFit(p.getBestPosition()) - evaluateFit(p.getSecondBestPosition())) < fitThreshold) {
+                            if(getDistDiff(p.getBestPosition(), p.getSecondBestPosition()) > distThreshold) {
                                 if(currentSwarmSize < finalSwarmSize) {
-                                    currentSwarmSize++;
                                     Particle newP = new Particle(fitnessFunction.dimensions, fitnessFunction.upperBound, fitnessFunction.lowerBound);
                                     newP.setP(p.getP());
-                                    swarm.add(currentSwarmSize-1,p);
-                                    bestPositions[currentSwarmSize-1] = secondBestPositions[i];
-                                    secondBestPositions[currentSwarmSize-1] = secondBestPositions[i];
+                                    //TODO - Figure this out
+                                    swarm.add(currentSwarmSize,p);
+                                    newP.setBestPosition(p.getSecondBestPosition());
+                                    newP.setSecondBestPosition(p.getSecondBestPosition());
                                     addedParticle = true;
+                                    currentSwarmSize++;
                                 }
                             }
                         }
@@ -191,14 +186,14 @@ public abstract class PSOProcess implements Constants{
         for(int k=0; k<currentSwarmSize; k++)
         {
             double[] newBest = findLocalGBest(k, currentSwarmSize);
-            if(evaluateFit(newBest) < evaluateFit(globalBests[k])) {
-                globalBests[k] = newBest;
+            if(evaluateFit(newBest) < evaluateFit(swarm.get(k).getNeighbourhoodBest())) {
+                swarm.get(k).setNeighbourhoodBest(newBest);
             }
         }
         findGBest();
-        globalFitnessArray[iteration] = evaluateFit(bestPositions[globalBestIndex]);
+        globalFitnessArray[iteration] = evaluateFit(swarm.get(globalBestIndex).getBestPosition());
         if(iteration == numIterations-1) {
-            System.out.println(evaluateFit(bestPositions[globalBestIndex]));
+            System.out.println(evaluateFit(swarm.get(globalBestIndex).getBestPosition()));
         }
         return addedParticle;
     }
