@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class PSOProcess implements Constants{
@@ -5,7 +6,8 @@ public abstract class PSOProcess implements Constants{
     public PSOProcess() {}
 
     public Functions fitnessFunction;
-    Particle[] swarm = new Particle[finalSwarmSize];
+    //May want to add an initial capacity here
+    ArrayList<Particle> swarm = new ArrayList<>();
     public double[][] bestPositions;
     public double[][] secondBestPositions;
     public double[][] globalBests;
@@ -26,7 +28,7 @@ public abstract class PSOProcess implements Constants{
         for(int i=0; i<initialSwarmSize; i++)
         {
             Particle p = new Particle(fitnessFunction.dimensions, fitnessFunction.upperBound, fitnessFunction.lowerBound);
-            swarm[i] = p;
+            swarm.add(p);
             bestPositions[i] = p.getP();
             secondBestPositions[i] = p.getP();
         }
@@ -84,7 +86,7 @@ public abstract class PSOProcess implements Constants{
         double L = 0;
         for(int i=0; i<currentSwarmSize; i++) {
             for(int j=0; j<currentSwarmSize; j++) {
-                newL = getDistDiff(swarm[i].getP(),swarm[j].getP());
+                newL = getDistDiff(swarm.get(i).getP(),swarm.get(j).getP());
                 if(newL > L) {
                     L = newL;
                 }
@@ -122,7 +124,8 @@ public abstract class PSOProcess implements Constants{
     public void removeWorstParticle() {
         findGBest();
         if(currentSwarmSize > lowestSwarmSize) {
-
+            swarm.remove(globalWorstIndex);
+            currentSwarmSize--;
         }
     }
 
@@ -136,7 +139,7 @@ public abstract class PSOProcess implements Constants{
 
         for(int i=0; i<currentSwarmSize; i++)
         {
-            Particle p = swarm[i];
+            Particle p = swarm.get(i);
 
             double[] pbest = bestPositions[i];
             double[] gbest = globalBests[i];
@@ -173,7 +176,7 @@ public abstract class PSOProcess implements Constants{
                                     currentSwarmSize++;
                                     Particle newP = new Particle(fitnessFunction.dimensions, fitnessFunction.upperBound, fitnessFunction.lowerBound);
                                     newP.setP(p.getP());
-                                    swarm[currentSwarmSize-1] = p;
+                                    swarm.add(currentSwarmSize-1,p);
                                     bestPositions[currentSwarmSize-1] = secondBestPositions[i];
                                     secondBestPositions[currentSwarmSize-1] = secondBestPositions[i];
                                     addedParticle = true;
