@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class PSOMain implements Constants{
 
-    private static int numRuns = 3;
+    private static int numRuns = 25;
     public static void main(String[] Args)
     {
         runStandardTests();
@@ -16,13 +16,14 @@ public class PSOMain implements Constants{
         double[] functionMeans = new double[functions.length];
         double[] functionDeviations = new double[functions.length];
         double[] functionProportions = new double[functions.length];
-        boolean ParticleAdded1 = false;
-        boolean ParticleAdded2 = false;
+        int ParticlesAdded1 = 0;
+        int ParticlesAdded2 = 0;
 
         int count = 0;
         for (String function :functions) {
             double[][] results1 = new double[numRuns][numIterations];
             double[][] results2 = new double[numRuns][numIterations];
+            double[][] results = new double[numRuns][numIterations];
             double[] averagedConvData = new double[numIterations];
             double[] finalRow = new double[numRuns];
 
@@ -35,24 +36,29 @@ public class PSOMain implements Constants{
 
                 for(int i=0; i<numIterations; i++) {
 
-                    ParticleAdded1 = swarm1.execute(i);
-                    if(ParticleAdded1) {
-                        swarm2.removeWorstParticle();
+                    ParticlesAdded1 = swarm1.execute(i);
+                    if(ParticlesAdded1 > 0) {
+                        swarm2.removeWorstParticle(ParticlesAdded1);
                     }
-                    ParticleAdded2 = swarm2.execute(i);
-                    if(ParticleAdded2) {
-                        swarm1.removeWorstParticle();
+                    ParticlesAdded2 = swarm2.execute(i);
+                    if(ParticlesAdded2 > 0) {
+                        swarm1.removeWorstParticle(ParticlesAdded2);
                     }
                 }
-                System.out.println("***");
                 results1[j] = swarm1.globalFitnessArray;
                 results2[j] = swarm2.globalFitnessArray;
+                if(swarm1.globalFitnessArray[numIterations-1] >= swarm2.globalFitnessArray[numIterations-1]) {
+                    results[j] = results2[j];
+                }
+                else {
+                    results[j] = results1[j];
+                }
+                System.out.println(j);
             }
-
             for(int i=0; i<numIterations; i++) {
                 double[] oneRowData = new double[numRuns];
                 for(int k=0; k<numRuns; k++) {
-                    oneRowData[k] = results1[k][i];
+                    oneRowData[k] = results[k][i];
                 }
                 averagedConvData[i] = getAverage(oneRowData);
                 finalRow = oneRowData;
