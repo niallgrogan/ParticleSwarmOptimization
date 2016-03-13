@@ -171,7 +171,7 @@ public abstract class PSOProcess implements Constants{
                                     newP.setP(p.getP());
                                     //TODO - Figure this out
                                     swarm.add(currentSwarmSize,newP);
-                                    double[] bestNeighbour = findLocalGBest(currentSwarmSize, currentSwarmSize);
+                                    double[] bestNeighbour = findLocalGBest(currentSwarmSize, currentSwarmSize+1);
                                     newP.setNeighbourhoodBest(bestNeighbour);
                                     newP.setBestPosition(p.getSecondBestPosition());
                                     newP.setSecondBestPosition(p.getSecondBestPosition());

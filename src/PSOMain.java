@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class PSOMain implements Constants{
 
-    private static int numRuns = 3;
+    private static int numRuns = 25;
     public static void main(String[] Args)
     {
         runStandardTests();
@@ -21,6 +21,7 @@ public class PSOMain implements Constants{
 
         int count = 0;
         for (String function :functions) {
+            double[][] results = new double[numRuns][numIterations];
             double[][] results1 = new double[numRuns][numIterations];
             double[][] results2 = new double[numRuns][numIterations];
             double[] averagedConvData = new double[numIterations];
@@ -47,12 +48,18 @@ public class PSOMain implements Constants{
                 System.out.println("***");
                 results1[j] = swarm1.globalFitnessArray;
                 results2[j] = swarm2.globalFitnessArray;
+                if(results1[j][numIterations-1] >= results2[j][numIterations-1]) {
+                    results[j] = results2[j];
+                }
+                else {
+                    results[j] = results1[j];
+                }
             }
 
             for(int i=0; i<numIterations; i++) {
                 double[] oneRowData = new double[numRuns];
                 for(int k=0; k<numRuns; k++) {
-                    oneRowData[k] = results1[k][i];
+                    oneRowData[k] = results[k][i];
                 }
                 averagedConvData[i] = getAverage(oneRowData);
                 finalRow = oneRowData;
