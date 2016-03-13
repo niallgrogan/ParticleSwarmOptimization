@@ -1,10 +1,10 @@
-/**
- * Created by Niall on 13/11/2015.
- */
 public class Particle implements Constants{
 
     private double[] pos;
     private double[] vel;
+    private double[] bestPosition;
+    private double[] secondBestPosition;
+    private double[] neighbourhoodBest;
 
     public Particle(int dimension, double upperBound, double lowerBound)
     {
@@ -16,6 +16,8 @@ public class Particle implements Constants{
             //Set using half diff method
             vel[i] = (((upperBound - lowerBound) * Math.random() + lowerBound) - pos[i]) / 2;
         }
+        bestPosition = pos;
+        secondBestPosition = pos;
     }
 
     public void setP(double[] p) {pos = p;}
@@ -25,4 +27,18 @@ public class Particle implements Constants{
     public void setV(double[] v) {vel = v;}
 
     public double[] getV() {return vel;}
+
+    public void setBestPosition(double[] p) {bestPosition = p;}
+
+    public double[] getBestPosition() {return bestPosition;}
+
+    public void setSecondBestPosition(double[] p) {secondBestPosition = p;}
+
+    public double[] getSecondBestPosition() {return secondBestPosition;}
+
+    public void setNeighbourhoodBest(double[] p) {neighbourhoodBest = p;}
+
+    public double[] getNeighbourhoodBest() {return neighbourhoodBest;}
+
+
 }
