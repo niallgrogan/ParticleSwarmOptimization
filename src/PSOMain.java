@@ -13,45 +13,61 @@ public class PSOMain implements Constants{
 
     private static void runStandardTests() {
 
-        double[] functionMeans = new double[functions.length];
-        double[] functionDeviations = new double[functions.length];
-        double[] functionProportions = new double[functions.length];
+        String[] tests = {"gBest","lBest","vonNeu"};
+        for(String t:tests) {
+            double[] functionMeans = new double[functions.length];
+            double[] functionDeviations = new double[functions.length];
+            double[] functionProportions = new double[functions.length];
 
-        int count = 0;
-        for (String function :functions) {
-            double[][] results = new double[numRuns][numIterations];
-            double[] averagedConvData = new double[numIterations];
-            double[] finalRow = new double[numRuns];
+            int count = 0;
+            for (String function :functions) {
+                double[][] results = new double[numRuns][numIterations];
+                double[] averagedConvData = new double[numIterations];
+                double[] finalRow = new double[numRuns];
 
-            for(int j=0; j<numRuns; j++) {
-                lBestPSO g = new lBestPSO(function);
-                g.initialise();
-                results[j] = g.execute();
-            }
+                for(int j=0; j<numRuns; j++) {
+                    if(tests.equals("gBest")) {
+                        gBestPSO g = new gBestPSO(function);
+                        g.initialise();
+                        results[j] = g.execute();
+                    }
+                    else if(tests.equals("lBest")) {
+                        lBestPSO g = new lBestPSO(function);
+                        g.initialise();
+                        results[j] = g.execute();
+                    }
+                    else {
+                        vonNeuPSO g = new vonNeuPSO(function);
+                        g.initialise();
+                        results[j] = g.execute();
+                    }
 
-            for(int i=0; i<numIterations; i++) {
-                double[] oneRowData = new double[numRuns];
-                for(int k=0; k<numRuns; k++) {
-                    oneRowData[k] = results[k][i];
                 }
-                averagedConvData[i] = getAverage(oneRowData);
-                finalRow = oneRowData;
-            }
-            toDataFile(finalRow, function);
-            functionMeans[count] = getAverage(finalRow);
-            functionDeviations[count] = getStdDev(finalRow, functionMeans[count]);
-            functionProportions[count] = getProportion(finalRow, function);
 
-            toConvergenceFile(averagedConvData, function);
-            System.out.println("Finished "+function);
-            count++;
+                for(int i=0; i<numIterations; i++) {
+                    double[] oneRowData = new double[numRuns];
+                    for(int k=0; k<numRuns; k++) {
+                        oneRowData[k] = results[k][i];
+                    }
+                    averagedConvData[i] = getAverage(oneRowData);
+                    finalRow = oneRowData;
+                }
+                toDataFile(finalRow, function, t);
+                functionMeans[count] = getAverage(finalRow);
+                functionDeviations[count] = getStdDev(finalRow, functionMeans[count]);
+                functionProportions[count] = getProportion(finalRow, function);
+
+                toConvergenceFile(averagedConvData, function, t);
+                System.out.println("Finished "+function+" "+t);
+                count++;
+            }
+            toMeanDevFile(functionMeans,functionDeviations, functionProportions, t);
         }
-        toMeanDevFile(functionMeans,functionDeviations, functionProportions);
     }
 
-    private static void toDataFile(double[] results, String function) {
+    private static void toDataFile(double[] results, String function, String test) {
         try {
-            BufferedWriter br = new BufferedWriter(new FileWriter("Results "+function+".csv"));
+            BufferedWriter br = new BufferedWriter(new FileWriter(test+" Results "+function+".csv"));
             StringBuilder sb = new StringBuilder();
             for(double r:results) {
                 sb.append(r);
@@ -63,11 +79,11 @@ public class PSOMain implements Constants{
         catch (Exception e) {}
     }
 
-    private static void toMeanDevFile(double[] means, double[] devs, double[] proportions) {
+    private static void toMeanDevFile(double[] means, double[] devs, double[] proportions, String test) {
         try {
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
-            BufferedWriter br = new BufferedWriter(new FileWriter("MeanDevs_"+sdf.format(date)+".csv"));
+            BufferedWriter br = new BufferedWriter(new FileWriter(test+" MeanDevs_"+sdf.format(date)+".csv"));
             StringBuilder sb = new StringBuilder();
             for(String s : functions) {
                 sb.append(s);
@@ -100,9 +116,9 @@ public class PSOMain implements Constants{
         }
     }
 
-    private static void toConvergenceFile(double[] averagedConvData, String function) {
+    private static void toConvergenceFile(double[] averagedConvData, String function, String test) {
         try {
-            BufferedWriter br = new BufferedWriter(new FileWriter(function+"Convergence_Mean.csv"));
+            BufferedWriter br = new BufferedWriter(new FileWriter(test+" "+function+"Convergence_Mean.csv"));
             StringBuilder sb = new StringBuilder();
             for(double d:averagedConvData) {
                 sb.append(d);
