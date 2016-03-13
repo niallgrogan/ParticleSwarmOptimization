@@ -159,16 +159,14 @@ public abstract class PSOProcess implements Constants{
                                 if(getDistDiff(bestPositions[i], secondBestPositions[i]) > distThreshold) {
                                     //Prevent swarm getting too big
                                     if(currentSwarmSize < finalSwarmSize) {
-                                        //Increment swarm size
-                                        currentSwarmSize++;
                                         Particle newP = new Particle(fitnessFunction.dimensions, fitnessFunction.upperBound, fitnessFunction.lowerBound);
-                                        //Give new particle position of old particle
+                                        double[] newBest = findLocalGBest(currentSwarmSize, currentSwarmSize);
+                                        globalBests[currentSwarmSize] = newBest;
                                         newP.setP(p.getP());
-//                                    System.out.println("New PArticles");
-                                        //Generate new velocity using half-diff method
-                                        swarm[currentSwarmSize-1] = newP;
-                                        bestPositions[currentSwarmSize-1] = secondBestPositions[i];
-                                        secondBestPositions[currentSwarmSize-1] = secondBestPositions[i];
+                                        swarm[currentSwarmSize] = newP;
+                                        bestPositions[currentSwarmSize] = secondBestPositions[i];
+                                        secondBestPositions[currentSwarmSize] = secondBestPositions[i];
+                                        currentSwarmSize++;
                                     }
                                 }
                             }
@@ -193,14 +191,15 @@ public abstract class PSOProcess implements Constants{
                     }
 
 //                }
-            }
-            for(int k=0; k<currentSwarmSize; k++)
-            {
-                double[] newBest = findLocalGBest(k, currentSwarmSize);
-                if(evaluateFit(newBest) < evaluateFit(globalBests[k])) {
-                    globalBests[k] = newBest;
+                for(int k=0; k<currentSwarmSize; k++)
+                {
+                    double[] newBest = findLocalGBest(k, currentSwarmSize);
+                    if(evaluateFit(newBest) < evaluateFit(globalBests[k])) {
+                        globalBests[k] = newBest;
+                    }
                 }
             }
+
             findGBest();
             globalFitnessArray[j] = evaluateFit(bestPositions[globalBestIndex]);
 //            System.out.println(evaluateFit(bestPositions[globalBestIndex]));
