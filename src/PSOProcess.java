@@ -77,7 +77,13 @@ public abstract class PSOProcess implements Constants{
     public abstract double[] findLocalGBest(int particleNumber, int currentSwarmSize);
 
     public double[] rouletteWheel(int i) {
+        double rand = new Random().nextDouble();
+        if(rand <= 1.0/3.0) {
+            return swarm.get(i).getSecondBestPosition();
+        }
+        else {
             return swarm.get(i).getBestPosition();
+        }
     }
 
     public double getDistDiff(double[] pos1, double[] pos2) {

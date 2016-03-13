@@ -26,12 +26,12 @@ public class PSOMain implements Constants{
                 double[] finalRow = new double[numRuns];
 
                 for(int j=0; j<numRuns; j++) {
-                    if(tests.equals("gBest")) {
+                    if(t.equals("gBest")) {
                         gBestPSO g = new gBestPSO(function);
                         g.initialise();
                         results[j] = g.execute();
                     }
-                    else if(tests.equals("lBest")) {
+                    else if(t.equals("lBest")) {
                         lBestPSO g = new lBestPSO(function);
                         g.initialise();
                         results[j] = g.execute();
