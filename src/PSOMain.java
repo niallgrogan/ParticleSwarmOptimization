@@ -28,10 +28,10 @@ public class PSOMain implements Constants{
             double[] finalRow = new double[numRuns];
 
             for(int j=0; j<numRuns; j++) {
-                gBestPSO swarm1 = new gBestPSO(function);
+                vonNeuPSO swarm1 = new vonNeuPSO(function);
                 swarm1.initialise();
 
-                gBestPSO swarm2 = new gBestPSO(function);
+                vonNeuPSO swarm2 = new vonNeuPSO(function);
                 swarm2.initialise();
 
                 for(int i=0; i<numIterations; i++) {
