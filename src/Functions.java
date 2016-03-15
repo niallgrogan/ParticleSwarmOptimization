@@ -81,26 +81,6 @@ public class Functions implements Constants{
                 lowerBound = -5;
                 goal = -330 + 0.01;
                 break;
-            case "f1": dimensions = 30;
-                upperBound = 100;
-                lowerBound = -100;
-                break;
-            case "f2": dimensions = 30;
-                upperBound = 100;
-                lowerBound = -100;
-                break;
-            case "f3": dimensions = 30;
-                upperBound = 100;
-                lowerBound = -100;
-                break;
-            case "f4": dimensions = 30;
-                upperBound = 100;
-                lowerBound = -100;
-                break;
-            case "f9": dimensions = 30;
-                upperBound = 5;
-                lowerBound = -5;
-                break;
         }
     }
 
@@ -209,47 +189,6 @@ public class Functions implements Constants{
                     fitness = fitness + (100*(Math.pow((Math.pow((p[i]-390.0+1),2))-(p[i+1]-390.0+1),2)+Math.pow(((p[i]-390.0+1)-1),2)));
                 }
                 fitness = fitness + 390.0;
-                break;
-            case "f9":
-                for (int i=0; i<dimensions; i++)
-                {
-                    sum += ((p[i]-330)*(p[i]-330) - 10.0*Math.cos(2*Math.PI*(p[i])-330));
-                }
-                fitness = 10*dimensions + sum;
-                fitness = fitness - 330;
-                break;
-            //Not sure if anything below working correctly
-            case "f1":
-                for (int i=0; i<dimensions; i++)
-                        {
-                            fitness = fitness + Math.pow((p[i] - 450.0),2);
-                        }
-                        fitness = fitness - 450.0;
-                        break;
-            case "f2":
-                for (int i=0; i<dimensions; i++)
-                {
-                    for(int j=0; j<i; j++) {
-                        fitness = fitness + Math.pow((p[j] - 450.0),2);
-                    }
-                }
-                fitness = fitness - 450.0;
-                break;
-            case "f3":
-                for (int i=1; i<=dimensions; i++)
-                {
-                    fitness = fitness + Math.pow(10^6,(i-1)/(dimensions-1))*Math.pow((p[i-1]-450.0),2);
-                }
-                fitness = fitness - 450.0;
-                break;
-            case "f4":
-                for (int i=0; i<dimensions; i++)
-                {
-                    for(int j=0; j<i; j++) {
-                        fitness = fitness + Math.pow((p[j] - 450.0),2);
-                    }
-                }
-                fitness = fitness*0.4*Math.abs(getGaussian(0,1)) - 450.0;
                 break;
             case "f9":
                 for (int i=0; i<dimensions; i++)
