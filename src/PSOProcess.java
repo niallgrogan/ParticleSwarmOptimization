@@ -130,15 +130,14 @@ public abstract class PSOProcess implements Constants{
                                     //Prevent swarm getting too big
                                     if(currentSwarmSize < finalSwarmSize) {
                                         //Increment swarm size
-                                        currentSwarmSize++;
                                         Particle newP = new Particle(fitnessFunction.dimensions, fitnessFunction.upperBound, fitnessFunction.lowerBound);
-                                        //Give new particle position of old particle
+                                        double[] newBest = findLocalGBest(currentSwarmSize, currentSwarmSize);
+                                        globalBests[currentSwarmSize] = newBest;
                                         newP.setP(p.getP());
-//                                    System.out.println("New PArticles");
-                                        //Generate new velocity using half-diff method
-                                        swarm[currentSwarmSize-1] = p;
-                                        bestPositions[currentSwarmSize-1] = secondBestPositions[i];
-                                        secondBestPositions[currentSwarmSize-1] = secondBestPositions[i];
+                                        swarm[currentSwarmSize] = newP;
+                                        bestPositions[currentSwarmSize] = secondBestPositions[i];
+                                        secondBestPositions[currentSwarmSize] = secondBestPositions[i];
+                                        currentSwarmSize++;
                                     }
                                 }
                             }

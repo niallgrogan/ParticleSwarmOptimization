@@ -1,7 +1,7 @@
 
 public interface Constants {
     int numIterations = 10000;
-    int initialSwarmSize = 50;
+    int initialSwarmSize = 60;
     int finalSwarmSize = 70;
     double c1 = 2.05;
     double c2 = 2.05;
