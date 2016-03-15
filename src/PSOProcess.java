@@ -90,15 +90,7 @@ public abstract class PSOProcess implements Constants{
                 p.setP(newPos);
                 p.setV(newVel);
 
-                if(fitnessFunction.activeFunction.equals("f1") | fitnessFunction.activeFunction.equals("f2") |
-                fitnessFunction.activeFunction.equals("f3") | fitnessFunction.activeFunction.equals("f4") |
-                fitnessFunction.activeFunction.equals("f5") | fitnessFunction.activeFunction.equals("f6")) {
-                    if(evaluateFit(newPos) < evaluateFit(pbest))
-                    {
-                        bestPositions[i] = newPos;
-                    }
-                }
-                else if(inBounds) {
+                if(inBounds) {
                     if(evaluateFit(newPos) < evaluateFit(pbest))
                     {
                         bestPositions[i] = newPos;
