@@ -1,7 +1,9 @@
 public class gBestPSO extends PSOProcess {
 
-    public gBestPSO(String function) {
+    public gBestPSO(int function) {
         fitnessFunction = new Functions(function);
+        fitFunc = new Functions_K(fitnessFunction.activeFunction, fitnessFunction.dimensions,
+                fitnessFunction.upperBound, fitnessFunction.lowerBound);
         bestPositions = new double[swarmSize][fitnessFunction.dimensions];
         globalBests = new double[swarmSize][fitnessFunction.dimensions];
     }

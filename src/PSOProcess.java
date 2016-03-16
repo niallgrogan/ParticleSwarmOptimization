@@ -5,6 +5,7 @@ public abstract class PSOProcess implements Constants{
     public PSOProcess() {}
 
     public Functions fitnessFunction;
+    public Functions_K fitFunc;
     Particle[] swarm = new Particle[swarmSize];
     public double[][] bestPositions;
     public double[][] globalBests;
@@ -16,7 +17,7 @@ public abstract class PSOProcess implements Constants{
     public void initialise() {
         for(int i=0; i<swarm.length; i++)
         {
-            Particle p = new Particle(fitnessFunction.dimensions, fitnessFunction.upperBound, fitnessFunction.lowerBound);
+            Particle p = new Particle(fitnessFunction.dimensions, fitnessFunction.upperBound.get(0), fitnessFunction.lowerBound.get(0));
             swarm[i] = p;
             bestPositions[i] = p.getP();
         }
@@ -51,6 +52,8 @@ public abstract class PSOProcess implements Constants{
     }
 
     public double evaluateFit(double[] p) {
+        //TODO - fix the hack below
+        fitFunc.FitnessCheck();
         return fitnessFunction.findFitness(p);
     }
 
@@ -82,7 +85,7 @@ public abstract class PSOProcess implements Constants{
 
                     newPos[k] = p.getP()[k] + newVel[k];
                     //Setting boundary conditions
-                    if(newPos[k] > fitnessFunction.upperBound | newPos[k] < fitnessFunction.lowerBound) {
+                    if(newPos[k] > fitnessFunction.upperBound.get(0) | newPos[k] < fitnessFunction.lowerBound.get(0)) {
                         inBounds = false;
                     }
                 }

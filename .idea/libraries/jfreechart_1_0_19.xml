@@ -2,8 +2,12 @@
   <library name="jfreechart-1.0.19">
     <CLASSES>
       <root url="jar://C:/Tools/JFreeChart/jfreechart-1.0.19/lib/jfreechart-1.0.19.jar!/" />
+      <root url="jar://C:/Tools/ejml-0.7.jar!/" />
+      <root url="jar://C:/Tools/ejml.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://C:/Tools/ejml-0.7.jar!/" />
+    </SOURCES>
   </library>
 </component>

@@ -1,10 +1,10 @@
-/**
- * Created by Niall on 12/01/2016.
- */
+
 public class vonNeuPSO extends PSOProcess {
 
-    public vonNeuPSO(String function) {
+    public vonNeuPSO(int function) {
         fitnessFunction = new Functions(function);
+        fitFunc = new Functions_K(fitnessFunction.activeFunction, fitnessFunction.dimensions,
+                fitnessFunction.upperBound, fitnessFunction.lowerBound);
         bestPositions = new double[swarmSize][fitnessFunction.dimensions];
         globalBests = new double[swarmSize][fitnessFunction.dimensions];
     }

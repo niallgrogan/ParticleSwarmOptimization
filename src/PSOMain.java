@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class PSOMain implements Constants{
 
-    private static int numRuns = 25;
+    private static int numRuns = 1;
     public static void main(String[] Args)
     {
         runStandardTests();
@@ -20,7 +20,7 @@ public class PSOMain implements Constants{
             double[] functionProportions = new double[functions.length];
 
             int count = 0;
-            for (String function :functions) {
+            for (int function :functions) {
                 double[][] results = new double[numRuns][numIterations];
                 double[] averagedConvData = new double[numIterations];
                 double[] finalRow = new double[numRuns];
@@ -52,84 +52,84 @@ public class PSOMain implements Constants{
                     averagedConvData[i] = getAverage(oneRowData);
                     finalRow = oneRowData;
                 }
-                toDataFile(finalRow, function, t);
+//                toDataFile(finalRow, function, t);
                 functionMeans[count] = getAverage(finalRow);
                 functionDeviations[count] = getStdDev(finalRow, functionMeans[count]);
-                functionProportions[count] = getProportion(finalRow, function);
+//                functionProportions[count] = getProportion(finalRow, function);
 
-                toConvergenceFile(averagedConvData, function, t);
+//                toConvergenceFile(averagedConvData, function, t);
                 System.out.println("Finished "+function+" "+t);
                 count++;
             }
-            toMeanDevFile(functionMeans,functionDeviations, functionProportions, t);
+//            toMeanDevFile(functionMeans,functionDeviations, functionProportions, t);
         }
     }
 
-    private static void toDataFile(double[] results, String function, String test) {
-        try {
-            BufferedWriter br = new BufferedWriter(new FileWriter(test+" Results "+function+".csv"));
-            StringBuilder sb = new StringBuilder();
-            for(double r:results) {
-                sb.append(r);
-                sb.append(",\n");
-            }
-            br.write(sb.toString());
-            br.close();
-        }
-        catch (Exception e) {}
-    }
+//    private static void toDataFile(double[] results, String function, String test) {
+//        try {
+//            BufferedWriter br = new BufferedWriter(new FileWriter(test+" Results "+function+".csv"));
+//            StringBuilder sb = new StringBuilder();
+//            for(double r:results) {
+//                sb.append(r);
+//                sb.append(",\n");
+//            }
+//            br.write(sb.toString());
+//            br.close();
+//        }
+//        catch (Exception e) {}
+//    }
+//TODO - reimplement this
+//    private static void toMeanDevFile(double[] means, double[] devs, double[] proportions, String test) {
+//        try {
+//            Date date = new Date();
+//            SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
+//            BufferedWriter br = new BufferedWriter(new FileWriter(test+" MeanDevs_"+sdf.format(date)+".csv"));
+//            StringBuilder sb = new StringBuilder();
+//            for(String s : functions) {
+//                sb.append(s);
+//                if(s.equals("Griewank(10D)")) {
+//                    sb.append(",\n");
+//                }
+//                else {
+//                    sb.append(", ");
+//                }
+//            }
+//            for(double m:means) {
+//                sb.append(m);
+//                sb.append(", ");
+//            }
+//            sb.append("\n");
+//            for(double d:devs) {
+//                sb.append(d);
+//                sb.append(", ");
+//            }
+//            sb.append("\n");
+//            for(double p:proportions) {
+//                sb.append(p);
+//                sb.append(", ");
+//            }
+//            br.write(sb.toString());
+//            br.close();
+//
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-    private static void toMeanDevFile(double[] means, double[] devs, double[] proportions, String test) {
-        try {
-            Date date = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
-            BufferedWriter br = new BufferedWriter(new FileWriter(test+" MeanDevs_"+sdf.format(date)+".csv"));
-            StringBuilder sb = new StringBuilder();
-            for(String s : functions) {
-                sb.append(s);
-                if(s.equals("Griewank(10D)")) {
-                    sb.append(",\n");
-                }
-                else {
-                    sb.append(", ");
-                }
-            }
-            for(double m:means) {
-                sb.append(m);
-                sb.append(", ");
-            }
-            sb.append("\n");
-            for(double d:devs) {
-                sb.append(d);
-                sb.append(", ");
-            }
-            sb.append("\n");
-            for(double p:proportions) {
-                sb.append(p);
-                sb.append(", ");
-            }
-            br.write(sb.toString());
-            br.close();
-
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void toConvergenceFile(double[] averagedConvData, String function, String test) {
-        try {
-            BufferedWriter br = new BufferedWriter(new FileWriter(test+" "+function+"Convergence_Mean.csv"));
-            StringBuilder sb = new StringBuilder();
-            for(double d:averagedConvData) {
-                sb.append(d);
-                sb.append(",\n");
-            }
-            br.write(sb.toString());
-            br.close();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    private static void toConvergenceFile(double[] averagedConvData, String function, String test) {
+//        try {
+//            BufferedWriter br = new BufferedWriter(new FileWriter(test+" "+function+"Convergence_Mean.csv"));
+//            StringBuilder sb = new StringBuilder();
+//            for(double d:averagedConvData) {
+//                sb.append(d);
+//                sb.append(",\n");
+//            }
+//            br.write(sb.toString());
+//            br.close();
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private static double getAverage(double[] arr) {
         double sum =0.0;
@@ -145,31 +145,31 @@ public class PSOMain implements Constants{
         return Math.sqrt(temp/(double)data.length);
     }
 
-    private static double getProportion(double[] data, String function) {
-        double goal;
-        double numCorrect = 0.0;
-        switch (function) {
-            case "Sphere": goal = 0.01;
-                break;
-            case "Rosenbrock": goal = 100;
-                break;
-            case "Ackley": goal = 0.01;
-                break;
-            case "Griewank": goal = 0.05;
-                break;
-            case "Rastrigin": goal = 100;
-                break;
-            case "Schaffer(2D)": goal = 0.00001;
-                break;
-            case "Griewank(10D)": goal = 0.05;
-                break;
-            default: goal = 0.0;
-        }
-        for(double d:data) {
-            if(d <= goal) {
-                numCorrect++;
-            }
-        }
-        return numCorrect/numRuns;
-    }
+//    private static double getProportion(double[] data, String function) {
+//        double goal;
+//        double numCorrect = 0.0;
+//        switch (function) {
+//            case "Sphere": goal = 0.01;
+//                break;
+//            case "Rosenbrock": goal = 100;
+//                break;
+//            case "Ackley": goal = 0.01;
+//                break;
+//            case "Griewank": goal = 0.05;
+//                break;
+//            case "Rastrigin": goal = 100;
+//                break;
+//            case "Schaffer(2D)": goal = 0.00001;
+//                break;
+//            case "Griewank(10D)": goal = 0.05;
+//                break;
+//            default: goal = 0.0;
+//        }
+//        for(double d:data) {
+//            if(d <= goal) {
+//                numCorrect++;
+//            }
+//        }
+//        return numCorrect/numRuns;
+//    }
 }
