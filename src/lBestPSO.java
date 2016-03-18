@@ -1,22 +1,23 @@
+import java.util.ArrayList;
+
 public class lBestPSO extends PSOProcess{
 
     public lBestPSO(int function) {
+        swarm = new ArrayList<>();
         fitnessFunction = new Functions(function);
         fitFunc = new Functions_K(fitnessFunction.activeFunction, fitnessFunction.dimensions,
                 fitnessFunction.upperBound, fitnessFunction.lowerBound);
-        bestPositions = new double[swarmSize][fitnessFunction.dimensions];
-        globalBests = new double[swarmSize][fitnessFunction.dimensions];
     }
 
     //This method is slightly hacked together atm, may return and use
     //a circular array.
     @Override
-    public double[] findLocalGBest(int particleNumber) {
+    public Double[] findLocalGBest(int particleNumber) {
         if(particleNumber == 0) {
-            double[] localFitnesses = new double[3];
-            localFitnesses[0] = evaluateFit(bestPositions[swarmSize-1]);
-            localFitnesses[1] = evaluateFit(bestPositions[0]);
-            localFitnesses[2] = evaluateFit(bestPositions[1]);
+            Double[] localFitnesses = new Double[3];
+            localFitnesses[0] = evaluateFit(swarm.get(swarmSize-1).getBestPosition());
+            localFitnesses[1] = evaluateFit(swarm.get(0).getBestPosition());
+            localFitnesses[2] = evaluateFit(swarm.get(1).getBestPosition());
 
             int index = getMinPos(localFitnesses);
             if(index == 0) {
@@ -30,10 +31,10 @@ public class lBestPSO extends PSOProcess{
             }
         }
         else if(particleNumber == swarmSize-1) {
-            double[] localFitnesses = new double[3];
-            localFitnesses[0] = evaluateFit(bestPositions[swarmSize-2]);
-            localFitnesses[1] = evaluateFit(bestPositions[swarmSize-1]);
-            localFitnesses[2] = evaluateFit(bestPositions[0]);
+            Double[] localFitnesses = new Double[3];
+            localFitnesses[0] = evaluateFit(swarm.get(swarmSize-2).getBestPosition());
+            localFitnesses[1] = evaluateFit(swarm.get(swarmSize-1).getBestPosition());
+            localFitnesses[2] = evaluateFit(swarm.get(0).getBestPosition());
 
             int index = getMinPos(localFitnesses);
             if(index == 0) {
@@ -47,10 +48,10 @@ public class lBestPSO extends PSOProcess{
             }
         }
         else {
-            double[] localFitnesses = new double[3];
-            localFitnesses[0] = evaluateFit(bestPositions[particleNumber - 1]);
-            localFitnesses[1] = evaluateFit(bestPositions[particleNumber]);
-            localFitnesses[2] = evaluateFit(bestPositions[particleNumber + 1]);
+            Double[] localFitnesses = new Double[3];
+            localFitnesses[0] = evaluateFit(swarm.get(particleNumber-1).getBestPosition());
+            localFitnesses[1] = evaluateFit(swarm.get(particleNumber).getBestPosition());
+            localFitnesses[2] = evaluateFit(swarm.get(particleNumber+1).getBestPosition());
 
             int index = getMinPos(localFitnesses);
             if(index == 0) {
@@ -63,6 +64,6 @@ public class lBestPSO extends PSOProcess{
                 localBestIndex = particleNumber;
             }
         }
-        return bestPositions[localBestIndex];
+        return swarm.get(localBestIndex).getBestPosition();
     }
 }

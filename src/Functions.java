@@ -66,42 +66,175 @@ public class Functions implements Constants{
                     upperBound.add(100.0);
                     lowerBound.add(-100.0);
                 }
-                goal = -450 + 0.000001;
+                goal = 0.000001;
                 break;
             case 9: dimensions = 30;
                 for(int i=0; i<dimensions; i++) {
                     upperBound.add(100.0);
                     lowerBound.add(-100.0);
                 }
-                goal = -450 + 0.000001;
+                goal = 0.000001;
                 break;
             case 10: dimensions = 30;
                 for(int i=0; i<dimensions; i++) {
                     upperBound.add(100.0);
                     lowerBound.add(-100.0);
                 }
-                goal = -450 + 0.000001;
+                goal = 0.000001;
                 break;
             case 11: dimensions = 30;
                 for(int i=0; i<dimensions; i++) {
                     upperBound.add(100.0);
                     lowerBound.add(-100.0);
                 }
-                goal = -450 + 0.000001;
+                goal = 0.000001;
                 break;
             case 12: dimensions = 30;
                 for(int i=0; i<dimensions; i++) {
                     upperBound.add(100.0);
                     lowerBound.add(-100.0);
                 }
-                goal = -310 + 0.000001;
+                goal = 0.000001;
                 break;
             case 13: dimensions = 30;
                 for(int i=0; i<dimensions; i++) {
                     upperBound.add(100.0);
                     lowerBound.add(-100.0);
                 }
-                goal = 390 + 100;
+                goal = 0.01;
+                break;
+            case 14:  dimensions = 30;
+                for(int i=0; i<dimensions; i++) {
+                    upperBound.add(600.0);
+                    lowerBound.add(0.0);
+                }
+                goal = 0.01;
+                break;
+            case 15:  dimensions = 30;
+                for(int i=0; i<dimensions; i++) {
+                    upperBound.add(32.0);
+                    lowerBound.add(-32.0);
+                }
+                goal = 0.01;
+                break;
+            case 16:  dimensions = 30;
+                for(int i=0; i<dimensions; i++) {
+                    upperBound.add(5.0);
+                    lowerBound.add(-5.0);
+                }
+                goal = 0.01;
+                break;
+            case 17:  dimensions = 30;
+                for(int i=0; i<dimensions; i++) {
+                    upperBound.add(5.0);
+                    lowerBound.add(-5.0);
+                }
+                goal = 0.01;
+                break;
+            case 18:  dimensions = 30;
+                for(int i=0; i<dimensions; i++) {
+                    upperBound.add(0.5);
+                    lowerBound.add(-0.5);
+                }
+                goal = 0.01;
+                break;
+            case 19:  dimensions = 30;
+                for(int i=0; i<dimensions; i++) {
+                    upperBound.add(Math.PI);
+                    lowerBound.add(-Math.PI);
+                }
+                goal = 0.01;
+                break;
+            case 20:  dimensions = 30;
+                for(int i=0; i<dimensions; i++) {
+                    upperBound.add(5.0);
+                    lowerBound.add(-5.0);
+                }
+                goal = 0.01;
+                break;
+            case 21: dimensions = 30;
+                for(int i=0; i<dimensions; i++) {
+                    upperBound.add(100.0);
+                    lowerBound.add(-100.0);
+                }
+                goal = 0.01;
+                break;
+            case 22: dimensions = 30;
+                for(int i=0; i<dimensions; i++) {
+                    upperBound.add(5.0);
+                    lowerBound.add(-5.0);
+                }
+                goal = 0.01;
+                break;
+            case 23: dimensions = 30;
+                for(int i=0; i<dimensions; i++) {
+                    upperBound.add(5.0);
+                    lowerBound.add(-5.0);
+                }
+                goal = 0.01;
+                break;
+            case 24: dimensions = 30;
+                for(int i=0; i<dimensions; i++) {
+                    upperBound.add(5.0);
+                    lowerBound.add(-5.0);
+                }
+                goal = 0.1;
+                break;
+            case 25: dimensions = 30;
+                for(int i=0; i<dimensions; i++) {
+                    upperBound.add(5.0);
+                    lowerBound.add(-5.0);
+                }
+                goal = 0.1;
+                break;
+            case 26: dimensions = 30;
+                for(int i=0; i<dimensions; i++) {
+                    upperBound.add(5.0);
+                    lowerBound.add(-5.0);
+                }
+                goal = 0.1;
+                break;
+            case 27: dimensions = 30;
+                for(int i=0; i<dimensions; i++) {
+                    upperBound.add(5.0);
+                    lowerBound.add(-5.0);
+                }
+                goal = 0.1;
+                break;
+            case 28: dimensions = 30;
+                for(int i=0; i<dimensions; i++) {
+                    upperBound.add(5.0);
+                    lowerBound.add(-5.0);
+                }
+                goal = 0.01;
+                break;
+            case 29: dimensions = 30;
+                for(int i=0; i<dimensions; i++) {
+                    upperBound.add(5.0);
+                    lowerBound.add(-5.0);
+                }
+                goal = 0.1;
+                break;
+            case 30: dimensions = 30;
+                for(int i=0; i<dimensions; i++) {
+                    upperBound.add(5.0);
+                    lowerBound.add(-5.0);
+                }
+                goal = 0.1;
+                break;
+            case 31: dimensions = 30;
+                for(int i=0; i<dimensions; i++) {
+                    upperBound.add(5.0);
+                    lowerBound.add(-5.0);
+                }
+                goal = 0.1;
+                break;
+            case 32: dimensions = 30;
+                for(int i=0; i<dimensions; i++) {
+                    upperBound.add(5.0);
+                    lowerBound.add(2.0);
+                }
+                goal = 0.1;
                 break;
         }
     }
