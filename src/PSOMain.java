@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class PSOMain implements Constants{
 
-    private static int numRuns = 1;
+    private static int numRuns = 25;
     public static void main(String[] Args)
     {
         runStandardTests();
@@ -13,7 +13,7 @@ public class PSOMain implements Constants{
 
     private static void runStandardTests() {
 
-        String[] tests = {"vonNeu"};//{"gBest","lBest","vonNeu"};
+        String[] tests = {"gBest","lBest","vonNeu"};
         for(String t:tests) {
             Double[] functionMeans = new Double[functions.length];
             Double[] functionDeviations = new Double[functions.length];
