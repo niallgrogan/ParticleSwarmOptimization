@@ -2,13 +2,15 @@ import java.util.ArrayList;
 
 public class vonNeuPSO extends PSOProcess {
 
-    public vonNeuPSO(String function) {
+    public vonNeuPSO(int function) {
         swarm = new ArrayList<>();
         fitnessFunction = new Functions(function);
+        fitFunc = new Functions_K(fitnessFunction.activeFunction, fitnessFunction.dimensions,
+                fitnessFunction.upperBound, fitnessFunction.lowerBound);
     }
 
-    private double[] findGlobalBest(int currentSwarmSize) {
-        double[] bestFitnesses = new double[currentSwarmSize];
+    private Double[] findGlobalBest(int currentSwarmSize) {
+        Double[] bestFitnesses = new Double[currentSwarmSize];
         for(int i=0; i<bestFitnesses.length; i++)
         {
             bestFitnesses[i] = evaluateFit(swarm.get(i).getBestPosition());
@@ -18,13 +20,13 @@ public class vonNeuPSO extends PSOProcess {
     }
 
     @Override
-    public double[] findLocalGBest(int particleNumber, int currentSwarmSize) {
+    public Double[] findLocalGBest(int particleNumber, int currentSwarmSize) {
         //This is a hack for dealing with problem of small swarm sizes
         if(currentSwarmSize <= 5) {
             return findGlobalBest(currentSwarmSize);
         }
         else {
-            double[] localFitnesses = new double[5];
+            Double[] localFitnesses = new Double[5];
             if(particleNumber == currentSwarmSize-2) {
                 localFitnesses[0] = evaluateFit(swarm.get(currentSwarmSize-4).getBestPosition());
                 localFitnesses[1] = evaluateFit(swarm.get(currentSwarmSize-3).getBestPosition());
