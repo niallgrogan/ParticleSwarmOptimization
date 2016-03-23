@@ -9,8 +9,21 @@ public class lBestPSO extends PSOProcess{
                 fitnessFunction.upperBound, fitnessFunction.lowerBound);
     }
 
+    private Double[] findGlobalBest(int currentSwarmSize) {
+        Double[] bestFitnesses = new Double[currentSwarmSize];
+        for(int i=0; i<bestFitnesses.length; i++)
+        {
+            bestFitnesses[i] = evaluateFit(swarm.get(i).getBestPosition());
+        }
+        localBestIndex = getMinPos(bestFitnesses, currentSwarmSize);
+        return swarm.get(localBestIndex).getBestPosition();
+    }
+
     @Override
     public Double[] findLocalGBest(int particleNumber, int currentSwarmSize) {
+        if(currentSwarmSize <= 3) {
+            return findGlobalBest(currentSwarmSize);
+        }
         if(particleNumber == 0) {
             Double[] localFitnesses = new Double[3];
             localFitnesses[0] = evaluateFit(swarm.get(currentSwarmSize-1).getBestPosition());
