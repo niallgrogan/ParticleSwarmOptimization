@@ -19,8 +19,8 @@ public abstract class PSOProcess implements Constants{
     private Double distThreshold;
     private Double alpha = defaultAlpha;
     private Double beta = defaultBeta;
-    private int evaluationIteration = 2;
-    public boolean addedParticle = false;
+    private int evaluationIteration = 100;
+    public int addedParticle = 0;
 
     public void initialise() {
         for(int i=0; i<initialSwarmSize; i++)
@@ -120,17 +120,19 @@ public abstract class PSOProcess implements Constants{
         return diff;
     }
 
-    public void removeWorstParticle() {
-        findGBest();
-        if(currentSwarmSize > lowestSwarmSize) {
-            swarm.remove(globalWorstIndex);
-            currentSwarmSize--;
+    public void removeWorstParticle(int numToRemove) {
+        for(int i=0; i<numToRemove; i++) {
+            findGBest();
+            if(currentSwarmSize > lowestSwarmSize) {
+                swarm.remove(globalWorstIndex);
+                currentSwarmSize--;
+            }
         }
     }
 
-    public boolean execute(int iteration) {
+    public int execute(int iteration) {
 
-        addedParticle = false;
+        addedParticle = 0;
         if(iteration==evaluationIteration) {
             double dist = getLongestDiagonal();
             distThreshold = dist/alpha;
@@ -172,17 +174,7 @@ public abstract class PSOProcess implements Constants{
                         if (Math.abs(evaluateFit(p.getBestPosition()) - evaluateFit(p.getSecondBestPosition())) < fitThreshold) {
                             if(getDistDiff(p.getBestPosition(), p.getSecondBestPosition()) > distThreshold) {
                                 if(currentSwarmSize < finalSwarmSize) {
-                                    Particle newP = new Particle(fitnessFunction.dimensions,
-                                            fitnessFunction.upperBound.get(0), fitnessFunction.lowerBound.get(0));
-                                    newP.setP(p.getP());
-                                    //TODO - Figure this out
-                                    swarm.add(currentSwarmSize,newP);
-                                    Double[] bestNeighbour = findLocalGBest(currentSwarmSize, currentSwarmSize+1);
-                                    newP.setNeighbourhoodBest(bestNeighbour);
-                                    newP.setBestPosition(p.getSecondBestPosition());
-                                    newP.setSecondBestPosition(p.getSecondBestPosition());
-                                    addedParticle = true;
-                                    currentSwarmSize++;
+                                    addParticle(p);
                                 }
                             }
                         }
@@ -204,5 +196,19 @@ public abstract class PSOProcess implements Constants{
             System.out.println(evaluateFit(swarm.get(globalBestIndex).getBestPosition()));
         }
         return addedParticle;
+    }
+
+    public void addParticle(Particle p) {
+        Particle newP = new Particle(fitnessFunction.dimensions,
+                fitnessFunction.upperBound.get(0), fitnessFunction.lowerBound.get(0));
+        newP.setP(p.getP());
+        //TODO - Figure this out
+        swarm.add(currentSwarmSize,newP);
+        Double[] bestNeighbour = findLocalGBest(currentSwarmSize, currentSwarmSize+1);
+        newP.setNeighbourhoodBest(bestNeighbour);
+        newP.setBestPosition(p.getSecondBestPosition());
+        newP.setSecondBestPosition(p.getSecondBestPosition());
+        addedParticle++;
+        currentSwarmSize++;
     }
 }
