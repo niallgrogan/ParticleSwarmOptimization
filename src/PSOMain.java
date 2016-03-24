@@ -37,21 +37,21 @@ public class PSOMain implements Constants{
 
                     if(t.equals("gBest")) {
                         swarm1 = new gBestPSO(function);
-                        swarm1.initialise();
+                        swarm1.initialise("L");
                         swarm2 = new gBestPSO(function);
-                        swarm2.initialise();
+                        swarm2.initialise("R");
                     }
                     else if(t.equals("lBest")) {
                         swarm1 = new lBestPSO(function);
-                        swarm1.initialise();
+                        swarm1.initialise("L");
                         swarm2 = new lBestPSO(function);
-                        swarm2.initialise();
+                        swarm2.initialise("R");
                     }
                     else {
                         swarm1 = new vonNeuPSO(function);
-                        swarm1.initialise();
+                        swarm1.initialise("L");
                         swarm2 = new vonNeuPSO(function);
-                        swarm2.initialise();
+                        swarm2.initialise("R");
                     }
 
                     for(int i=0; i<numIterations; i++) {
@@ -64,7 +64,6 @@ public class PSOMain implements Constants{
                         if(ParticleAdded2 > 0) {
                             swarm1.removeWorstParticle(ParticleAdded2);
                         }
-                        System.out.println("Swarm 1: "+swarm1.swarm.size()+"  Swarm 2: "+swarm2.swarm.size());
                     }
                     System.out.println("***");
                     results1[j] = swarm1.globalFitnessArray;

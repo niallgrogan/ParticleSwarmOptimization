@@ -21,13 +21,25 @@ public abstract class PSOProcess implements Constants{
     private Double beta = defaultBeta;
     private int evaluationIteration = 100;
     public int addedParticle = 0;
+    private Double medianBounds = 0.0;
 
-    public void initialise() {
-        for(int i=0; i<initialSwarmSize; i++)
-        {
-            Particle p = new Particle(fitnessFunction.dimensions,
-                    fitnessFunction.upperBound.get(0), fitnessFunction.lowerBound.get(0));
-            swarm.add(p);
+    public void initialise(String half) {
+        medianBounds = (fitnessFunction.upperBound.get(0)+fitnessFunction.lowerBound.get(0))/2;
+        if(half.equals("L")) {
+            for(int i=0; i<initialSwarmSize; i++)
+            {
+                Particle p = new Particle(fitnessFunction.dimensions,
+                        fitnessFunction.upperBound.get(0), medianBounds);
+                swarm.add(p);
+            }
+        }
+        else {
+            for(int i=0; i<initialSwarmSize; i++)
+            {
+                Particle p = new Particle(fitnessFunction.dimensions,
+                        medianBounds, fitnessFunction.lowerBound.get(0));
+                swarm.add(p);
+            }
         }
         currentSwarmSize = initialSwarmSize;
         for(int k=0; k<initialSwarmSize; k++)
