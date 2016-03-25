@@ -13,13 +13,13 @@ public class PSOMain implements Constants{
 
     private static void runStandardTests() {
 
-        String[] tests = {"gBest","lBest","vonNeu"};
+        String[] tests = {"lBest"};//{"gBest","lBest","vonNeu"};
         for(String t:tests) {
             Double[] functionMeans = new Double[functions.length];
             Double[] functionDeviations = new Double[functions.length];
             Double[] functionProportions = new Double[functions.length];
-            boolean ParticleAdded1 = false;
-            boolean ParticleAdded2 = false;
+            int ParticleAdded1 = 0;
+            int ParticleAdded2 = 0;
             int count = 0;
 
             for (int function :functions) {
@@ -30,42 +30,45 @@ public class PSOMain implements Constants{
                 Double[] finalRow = new Double[numRuns];
                 PSOProcess swarm1;
                 PSOProcess swarm2;
+                int s1size = 0;
+                int s2size = 0;
 
                 for(int j=0; j<numRuns; j++) {
 
                     if(t.equals("gBest")) {
                         swarm1 = new gBestPSO(function);
-                        swarm1.initialise();
+                        swarm1.initialise("L");
                         swarm2 = new gBestPSO(function);
-                        swarm2.initialise();
+                        swarm2.initialise("R");
                     }
                     else if(t.equals("lBest")) {
                         swarm1 = new lBestPSO(function);
-                        swarm1.initialise();
+                        swarm1.initialise("L");
                         swarm2 = new lBestPSO(function);
-                        swarm2.initialise();
+                        swarm2.initialise("R");
                     }
                     else {
                         swarm1 = new vonNeuPSO(function);
-                        swarm1.initialise();
+                        swarm1.initialise("L");
                         swarm2 = new vonNeuPSO(function);
-                        swarm2.initialise();
+                        swarm2.initialise("R");
                     }
 
                     for(int i=0; i<numIterations; i++) {
 
                         ParticleAdded1 = swarm1.execute(i);
-                        if(ParticleAdded1) {
-                            swarm2.removeWorstParticle();
+                        if(ParticleAdded1 > 0) {
+                            swarm2.removeWorstParticle(ParticleAdded1);
                         }
                         ParticleAdded2 = swarm2.execute(i);
-                        if(ParticleAdded2) {
-                            swarm1.removeWorstParticle();
+                        if(ParticleAdded2 > 0) {
+                            swarm1.removeWorstParticle(ParticleAdded2);
                         }
                     }
                     System.out.println("***");
                     results1[j] = swarm1.globalFitnessArray;
                     results2[j] = swarm2.globalFitnessArray;
+                    System.out.println("Swarm 1: "+swarm1.swarm.size()+"  Swarm 2: "+swarm2.swarm.size());
                     if(results1[j][numIterations-1] >= results2[j][numIterations-1]) {
                         results[j] = results2[j];
                     }
