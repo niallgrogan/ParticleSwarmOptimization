@@ -21,26 +21,39 @@ public abstract class PSOProcess implements Constants{
     private Double beta = defaultBeta;
     private int evaluationIteration = 100;
     public int addedParticle = 0;
-    private Double medianBounds = 0.0;
+    private Double boundsDivider = 0.0;
 
-    public void initialise(String half) {
-        medianBounds = (fitnessFunction.upperBound.get(0)+fitnessFunction.lowerBound.get(0))/2;
-        if(half.equals("L")) {
-            for(int i=0; i<initialSwarmSize; i++)
-            {
-                Particle p = new Particle(fitnessFunction.dimensions,
-                        fitnessFunction.upperBound.get(0), medianBounds);
-                swarm.add(p);
-            }
+    public void initialise(int numSwarms, int swarmIndex) {
+        boundsDivider = (fitnessFunction.upperBound.get(0)-fitnessFunction.lowerBound.get(0))/numSwarms;
+        for(int i=0; i<initialSwarmSize; i++)
+        {
+            Particle p = new Particle(fitnessFunction.dimensions,
+                    fitnessFunction.upperBound.get(0), fitnessFunction.upperBound.get(0)-(swarmIndex+1)*boundsDivider);
+            swarm.add(p);
         }
-        else {
-            for(int i=0; i<initialSwarmSize; i++)
-            {
-                Particle p = new Particle(fitnessFunction.dimensions,
-                        medianBounds, fitnessFunction.lowerBound.get(0));
-                swarm.add(p);
-            }
-        }
+//        if(half.equals("L")) {
+//            for(int i=0; i<initialSwarmSize; i++)
+//            {
+//                Particle p = new Particle(fitnessFunction.dimensions,
+//                        fitnessFunction.upperBound.get(0), medianBounds);
+//                swarm.add(p);
+//            }
+//        }
+//        else {
+//            for(int i=0; i<initialSwarmSize; i++)
+//            {
+//                Particle p = new Particle(fitnessFunction.dimensions,
+//                        medianBounds, fitnessFunction.lowerBound.get(0));
+//                swarm.add(p);
+//            }
+//        }
+
+//        for(int i=0; i<initialSwarmSize; i++)
+//        {
+//            Particle p = new Particle(fitnessFunction.dimensions,
+//                    fitnessFunction.upperBound.get(0), fitnessFunction.lowerBound.get(0));
+//            swarm.add(p);
+//        }
         currentSwarmSize = initialSwarmSize;
         for(int k=0; k<initialSwarmSize; k++)
         {
@@ -132,14 +145,17 @@ public abstract class PSOProcess implements Constants{
         return diff;
     }
 
-    public void removeWorstParticle(int numToRemove) {
-        for(int i=0; i<numToRemove; i++) {
-            findGBest();
-            if(currentSwarmSize > lowestSwarmSize) {
-                swarm.remove(globalWorstIndex);
-                currentSwarmSize--;
-            }
+    public void removeWorstParticle() {
+        findGBest();
+        if(currentSwarmSize > lowestSwarmSize) {
+            swarm.remove(globalWorstIndex);
+            currentSwarmSize--;
         }
+    }
+
+    public Double returnWorstParticleFitness() {
+        findGBest();
+        return evaluateFit(swarm.get(globalWorstIndex).getBestPosition());
     }
 
     public int execute(int iteration) {
@@ -170,7 +186,9 @@ public abstract class PSOProcess implements Constants{
 
                 newPos[k] = p.getP()[k] + newVel[k];
                 if(newPos[k] > fitnessFunction.upperBound.get(0) | newPos[k] < fitnessFunction.lowerBound.get(0)) {
-                    inBounds = false;
+                    if(fitnessFunction.activeFunction != 14) {
+                        inBounds = false;
+                    }
                 }
             }
             p.setP(newPos);

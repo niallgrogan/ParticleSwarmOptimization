@@ -6,6 +6,7 @@ import java.util.Date;
 public class PSOMain implements Constants{
 
     private static int numRuns = 25;
+    private static int numSwarms = 2;
     public static void main(String[] Args)
     {
         runStandardTests();
@@ -18,8 +19,6 @@ public class PSOMain implements Constants{
             Double[] functionMeans = new Double[functions.length];
             Double[] functionDeviations = new Double[functions.length];
             Double[] functionProportions = new Double[functions.length];
-            int ParticleAdded1 = 0;
-            int ParticleAdded2 = 0;
             int count = 0;
 
             for (int function :functions) {
@@ -28,73 +27,86 @@ public class PSOMain implements Constants{
                 Double[][] results2 = new Double[numRuns][numIterations];
                 Double[] averagedConvData = new Double[numIterations];
                 Double[] finalRow = new Double[numRuns];
-                PSOProcess swarm1;
-                PSOProcess swarm2;
-                int s1size = 0;
-                int s2size = 0;
+                PSOProcess[] multiSwarm = new PSOProcess[numSwarms];
+                int[] particleAdded = new int[numSwarms];
 
                 for(int j=0; j<numRuns; j++) {
+                    Double[] worstParticles = new Double[numSwarms];
 
                     if(t.equals("gBest")) {
-                        swarm1 = new gBestPSO(function);
-                        swarm1.initialise("L");
-                        swarm2 = new gBestPSO(function);
-                        swarm2.initialise("R");
+                        for(int m=0; m<multiSwarm.length; m++) {
+                            multiSwarm[m] = new gBestPSO(function);
+                            multiSwarm[m].initialise(numSwarms, m);
+                        }
                     }
                     else if(t.equals("lBest")) {
-                        swarm1 = new lBestPSO(function);
-                        swarm1.initialise("L");
-                        swarm2 = new lBestPSO(function);
-                        swarm2.initialise("R");
+                        for(int m=0; m<multiSwarm.length; m++) {
+                            multiSwarm[m] = new lBestPSO(function);
+                            multiSwarm[m].initialise(numSwarms, m);
+                        }
                     }
                     else {
-                        swarm1 = new vonNeuPSO(function);
-                        swarm1.initialise("L");
-                        swarm2 = new vonNeuPSO(function);
-                        swarm2.initialise("R");
+                        for(int m=0; m<multiSwarm.length; m++) {
+                            multiSwarm[m] = new vonNeuPSO(function);
+                            multiSwarm[m].initialise(numSwarms, m);
+                        }
                     }
 
                     for(int i=0; i<numIterations; i++) {
 
-                        ParticleAdded1 = swarm1.execute(i);
-                        if(ParticleAdded1 > 0) {
-                            swarm2.removeWorstParticle(ParticleAdded1);
-                        }
-                        ParticleAdded2 = swarm2.execute(i);
-                        if(ParticleAdded2 > 0) {
-                            swarm1.removeWorstParticle(ParticleAdded2);
+                        for(int m=0; m<multiSwarm.length; m++) {
+                            particleAdded[m] = multiSwarm[m].execute(i);
+                            if(particleAdded[m] > 0) {
+                                for(int q=0; q<particleAdded[m]; q++) {
+                                    Double worstParticleFitness = multiSwarm[0].returnWorstParticleFitness();
+                                    int worstSwarm = 0;
+                                    for(int n=1; n<multiSwarm.length; n++) {
+                                        worstParticles[n] = multiSwarm[n].returnWorstParticleFitness();
+                                        if(worstParticles[n] > worstParticleFitness) {
+                                            worstParticleFitness = worstParticles[n];
+                                            worstSwarm = n;
+                                        }
+                                    }
+                                    multiSwarm[worstSwarm].removeWorstParticle();
+                                }
+                            }
                         }
                     }
                     System.out.println("***");
-                    results1[j] = swarm1.globalFitnessArray;
-                    results2[j] = swarm2.globalFitnessArray;
-                    System.out.println("Swarm 1: "+swarm1.swarm.size()+"  Swarm 2: "+swarm2.swarm.size());
-                    if(results1[j][numIterations-1] >= results2[j][numIterations-1]) {
-                        results[j] = results2[j];
+                    for(int sw=0; sw<multiSwarm.length; sw++)
+                    {
+                        System.out.println("Swarm "+sw+": "+multiSwarm[sw].swarm.size());
                     }
-                    else {
-                        results[j] = results1[j];
-                    }
-                }
 
-                for(int i=0; i<numIterations; i++) {
-                    Double[] oneRowData = new Double[numRuns];
-                    for(int k=0; k<numRuns; k++) {
-                        oneRowData[k] = results[k][i];
-                    }
-                    averagedConvData[i] = getAverage(oneRowData);
-                    finalRow = oneRowData;
+//                    results1[j] = swarm1.globalFitnessArray;
+//                    results2[j] = swarm2.globalFitnessArray;
+//                    System.out.println("Swarm 1: "+swarm1.swarm.size()+"  Swarm 2: "+swarm2.swarm.size());
+//                    if(results1[j][numIterations-1] >= results2[j][numIterations-1]) {
+//                        results[j] = results2[j];
+//                    }
+//                    else {
+//                        results[j] = results1[j];
+//                    }
                 }
-                toDataFile(finalRow, function,t);
-                functionMeans[count] = getAverage(finalRow);
-                functionDeviations[count] = getStdDev(finalRow, functionMeans[count]);
-                functionProportions[count] = getProportion(finalRow, function);
-
-                toConvergenceFile(averagedConvData, function,t);
-                System.out.println("Finished "+function+" "+t);
-                count++;
+//
+//                for(int i=0; i<numIterations; i++) {
+//                    Double[] oneRowData = new Double[numRuns];
+//                    for(int k=0; k<numRuns; k++) {
+//                        oneRowData[k] = results[k][i];
+//                    }
+//                    averagedConvData[i] = getAverage(oneRowData);
+//                    finalRow = oneRowData;
+//                }
+//                toDataFile(finalRow, function,t);
+//                functionMeans[count] = getAverage(finalRow);
+//                functionDeviations[count] = getStdDev(finalRow, functionMeans[count]);
+//                functionProportions[count] = getProportion(finalRow, function);
+//
+//                toConvergenceFile(averagedConvData, function,t);
+//                System.out.println("Finished "+function+" "+t);
+//                count++;
             }
-            toMeanDevFile(functionMeans,functionDeviations, functionProportions,t);
+//            toMeanDevFile(functionMeans,functionDeviations, functionProportions,t);
         }
     }
 
