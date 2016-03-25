@@ -156,7 +156,9 @@ public abstract class PSOProcess implements Constants{
 
                 newPos[k] = p.getP()[k] + newVel[k];
                 if(newPos[k] > fitnessFunction.upperBound.get(0) | newPos[k] < fitnessFunction.lowerBound.get(0)) {
-                    inBounds = false;
+                    if(fitnessFunction.activeFunction != 14) {
+                        inBounds = false;
+                    }
                 }
             }
             p.setP(newPos);
