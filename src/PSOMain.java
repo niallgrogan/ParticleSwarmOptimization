@@ -13,7 +13,7 @@ public class PSOMain implements Constants{
 
     private static void runStandardTests() {
 
-        String[] tests = {"lBest"};//{"gBest","lBest","vonNeu"};
+        String[] tests = {"lBest","vonNeu"};//{"gBest","lBest","vonNeu"};
         for(String t:tests) {
             Double[] functionMeans = new Double[functions.length];
             Double[] functionDeviations = new Double[functions.length];

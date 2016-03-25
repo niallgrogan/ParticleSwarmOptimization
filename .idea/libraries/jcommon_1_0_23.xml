@@ -2,8 +2,12 @@
   <library name="jcommon-1.0.23">
     <CLASSES>
       <root url="jar://C:/Tools/JFreeChart/jfreechart-1.0.19/lib/jcommon-1.0.23.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../ejml-0.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../ejml.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../ejml-0.7.jar!/" />
+    </SOURCES>
   </library>
 </component>
