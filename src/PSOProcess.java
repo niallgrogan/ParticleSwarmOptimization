@@ -25,12 +25,12 @@ public abstract class PSOProcess implements Constants{
 
     public void initialise(int numSwarms, int swarmIndex) {
         boundsDivider = (fitnessFunction.upperBound.get(0)-fitnessFunction.lowerBound.get(0))/numSwarms;
-        for(int i=0; i<initialSwarmSize; i++)
-        {
-            Particle p = new Particle(fitnessFunction.dimensions,
-                    fitnessFunction.upperBound.get(0), fitnessFunction.upperBound.get(0)-(swarmIndex+1)*boundsDivider);
-            swarm.add(p);
-        }
+//        for(int i=0; i<initialSwarmSize; i++)
+//        {
+//            Particle p = new Particle(fitnessFunction.dimensions,
+//                    fitnessFunction.upperBound.get(0), fitnessFunction.upperBound.get(0)-(swarmIndex+1)*boundsDivider);
+//            swarm.add(p);
+//        }
 //        if(half.equals("L")) {
 //            for(int i=0; i<initialSwarmSize; i++)
 //            {
@@ -48,12 +48,12 @@ public abstract class PSOProcess implements Constants{
 //            }
 //        }
 
-//        for(int i=0; i<initialSwarmSize; i++)
-//        {
-//            Particle p = new Particle(fitnessFunction.dimensions,
-//                    fitnessFunction.upperBound.get(0), fitnessFunction.lowerBound.get(0));
-//            swarm.add(p);
-//        }
+        for(int i=0; i<initialSwarmSize; i++)
+        {
+            Particle p = new Particle(fitnessFunction.dimensions,
+                    fitnessFunction.upperBound.get(0), fitnessFunction.lowerBound.get(0));
+            swarm.add(p);
+        }
         currentSwarmSize = initialSwarmSize;
         for(int k=0; k<initialSwarmSize; k++)
         {
@@ -158,7 +158,7 @@ public abstract class PSOProcess implements Constants{
         return evaluateFit(swarm.get(globalWorstIndex).getBestPosition());
     }
 
-    public int execute(int iteration) {
+    public int execute(int iteration, boolean noMoreParticles) {
 
         addedParticle = 0;
         if(iteration==evaluationIteration) {
@@ -203,7 +203,7 @@ public abstract class PSOProcess implements Constants{
                     if(iteration > evaluationIteration) {
                         if (Math.abs(evaluateFit(p.getBestPosition()) - evaluateFit(p.getSecondBestPosition())) < fitThreshold) {
                             if(getDistDiff(p.getBestPosition(), p.getSecondBestPosition()) > distThreshold) {
-                                if(currentSwarmSize < finalSwarmSize) {
+                                if(currentSwarmSize < finalSwarmSize & !noMoreParticles) {
                                     addParticle(p);
                                 }
                             }

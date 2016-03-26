@@ -14,7 +14,7 @@ public class PSOMain implements Constants{
 
     private static void runStandardTests() {
 
-        String[] tests = {"lBest"};//{"gBest","lBest","vonNeu"};
+        String[] tests = {"gBest"};//{"gBest","lBest","vonNeu"};
         for(String t:tests) {
             Double[] functionMeans = new Double[functions.length];
             Double[] functionDeviations = new Double[functions.length];
@@ -28,9 +28,10 @@ public class PSOMain implements Constants{
                 Double[] averagedConvData = new Double[numIterations];
                 Double[] finalRow = new Double[numRuns];
                 PSOProcess[] multiSwarm = new PSOProcess[numSwarms];
-                int[] particleAdded = new int[numSwarms];
+
 
                 for(int j=0; j<numRuns; j++) {
+                    boolean noMoreParticles = false;
                     Double[] worstParticles = new Double[numSwarms];
 
                     if(t.equals("gBest")) {
@@ -53,14 +54,23 @@ public class PSOMain implements Constants{
                     }
 
                     for(int i=0; i<numIterations; i++) {
+                        int population = 0;
+                        for(int m=0; m<multiSwarm.length; m++) {
+                            population = population + multiSwarm[m].swarm.size();
+                        }
+                        if(population > 80) {
+                            noMoreParticles = true;
+                        }
 
                         for(int m=0; m<multiSwarm.length; m++) {
-                            particleAdded[m] = multiSwarm[m].execute(i);
+                            int[] particleAdded = new int[numSwarms];
+                            particleAdded[m] = multiSwarm[m].execute(i, noMoreParticles);
                             if(particleAdded[m] > 0) {
                                 for(int q=0; q<particleAdded[m]; q++) {
                                     Double worstParticleFitness = multiSwarm[0].returnWorstParticleFitness();
                                     int worstSwarm = 0;
                                     for(int n=1; n<multiSwarm.length; n++) {
+
                                         worstParticles[n] = multiSwarm[n].returnWorstParticleFitness();
                                         if(worstParticles[n] > worstParticleFitness) {
                                             worstParticleFitness = worstParticles[n];
