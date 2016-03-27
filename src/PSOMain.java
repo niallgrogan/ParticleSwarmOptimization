@@ -14,7 +14,7 @@ public class PSOMain implements Constants{
 
     private static void runStandardTests() {
 
-        String[] tests = {"gBest"};//{"gBest","lBest","vonNeu"};
+        String[] tests = {"lBest","vonNeu"};//{"gBest","lBest","vonNeu"};
         for(String t:tests) {
             Double[] functionMeans = new Double[functions.length];
             Double[] functionDeviations = new Double[functions.length];
@@ -88,35 +88,35 @@ public class PSOMain implements Constants{
                         System.out.println("Swarm "+sw+": "+multiSwarm[sw].swarm.size());
                     }
 
-//                    results1[j] = swarm1.globalFitnessArray;
-//                    results2[j] = swarm2.globalFitnessArray;
+                    results1[j] = multiSwarm[0].globalFitnessArray;
+                    results2[j] = multiSwarm[1].globalFitnessArray;
 //                    System.out.println("Swarm 1: "+swarm1.swarm.size()+"  Swarm 2: "+swarm2.swarm.size());
-//                    if(results1[j][numIterations-1] >= results2[j][numIterations-1]) {
-//                        results[j] = results2[j];
-//                    }
-//                    else {
-//                        results[j] = results1[j];
-//                    }
+                    if(results1[j][numIterations-1] >= results2[j][numIterations-1]) {
+                        results[j] = results2[j];
+                    }
+                    else {
+                        results[j] = results1[j];
+                    }
                 }
-//
-//                for(int i=0; i<numIterations; i++) {
-//                    Double[] oneRowData = new Double[numRuns];
-//                    for(int k=0; k<numRuns; k++) {
-//                        oneRowData[k] = results[k][i];
-//                    }
-//                    averagedConvData[i] = getAverage(oneRowData);
-//                    finalRow = oneRowData;
-//                }
-//                toDataFile(finalRow, function,t);
-//                functionMeans[count] = getAverage(finalRow);
-//                functionDeviations[count] = getStdDev(finalRow, functionMeans[count]);
-//                functionProportions[count] = getProportion(finalRow, function);
-//
-//                toConvergenceFile(averagedConvData, function,t);
-//                System.out.println("Finished "+function+" "+t);
-//                count++;
+
+                for(int i=0; i<numIterations; i++) {
+                    Double[] oneRowData = new Double[numRuns];
+                    for(int k=0; k<numRuns; k++) {
+                        oneRowData[k] = results[k][i];
+                    }
+                    averagedConvData[i] = getAverage(oneRowData);
+                    finalRow = oneRowData;
+                }
+                toDataFile(finalRow, function,t);
+                functionMeans[count] = getAverage(finalRow);
+                functionDeviations[count] = getStdDev(finalRow, functionMeans[count]);
+                functionProportions[count] = getProportion(finalRow, function);
+
+                toConvergenceFile(averagedConvData, function,t);
+                System.out.println("Finished "+function+" "+t);
+                count++;
             }
-//            toMeanDevFile(functionMeans,functionDeviations, functionProportions,t);
+            toMeanDevFile(functionMeans,functionDeviations, functionProportions,t);
         }
     }
 
