@@ -13,45 +13,61 @@ public class PSOMain implements Constants{
 
     private static void runStandardTests() {
 
-        double[] functionMeans = new double[functions.length];
-        double[] functionDeviations = new double[functions.length];
-        double[] functionProportions = new double[functions.length];
+        String[] tests = {"lBest"};//{"gBest","lBest","vonNeu"};
+        for(String t:tests) {
+            Double[] functionMeans = new Double[functions.length];
+            Double[] functionDeviations = new Double[functions.length];
+            Double[] functionProportions = new Double[functions.length];
 
-        int count = 0;
-        for (String function :functions) {
-            double[][] results = new double[numRuns][numIterations];
-            double[] averagedConvData = new double[numIterations];
-            double[] finalRow = new double[numRuns];
+            int count = 0;
+            for (int function :functions) {
+                Double[][] results = new Double[numRuns][numIterations];
+                Double[] averagedConvData = new Double[numIterations];
+                Double[] finalRow = new Double[numRuns];
 
-            for(int j=0; j<numRuns; j++) {
-                gBestPSO g = new gBestPSO(function);
-                g.initialise();
-                results[j] = g.execute();
-            }
+                for(int j=0; j<numRuns; j++) {
+                    if(t.equals("gBest")) {
+                        gBestPSO g = new gBestPSO(function);
+                        g.initialise();
+                        results[j] = g.execute();
+                    }
+                    else if(t.equals("lBest")) {
+                        lBestPSO g = new lBestPSO(function);
+                        g.initialise();
+                        results[j] = g.execute();
+                    }
+                    else {
+                        vonNeuPSO g = new vonNeuPSO(function);
+                        g.initialise();
+                        results[j] = g.execute();
+                    }
 
-            for(int i=0; i<numIterations; i++) {
-                double[] oneRowData = new double[numRuns];
-                for(int k=0; k<numRuns; k++) {
-                    oneRowData[k] = results[k][i];
                 }
-                averagedConvData[i] = getAverage(oneRowData);
-                finalRow = oneRowData;
-            }
-            toDataFile(finalRow, function);
-            functionMeans[count] = getAverage(finalRow);
-            functionDeviations[count] = getStdDev(finalRow, functionMeans[count]);
-            functionProportions[count] = getProportion(finalRow, function);
 
-            toConvergenceFile(averagedConvData, function);
-            System.out.println("Finished "+function);
-            count++;
+                for(int i=0; i<numIterations; i++) {
+                    Double[] oneRowData = new Double[numRuns];
+                    for(int k=0; k<numRuns; k++) {
+                        oneRowData[k] = results[k][i];
+                    }
+                    averagedConvData[i] = getAverage(oneRowData);
+                    finalRow = oneRowData;
+                }
+                toDataFile(finalRow, function, t);
+                functionMeans[count] = getAverage(finalRow);
+                functionDeviations[count] = getStdDev(finalRow, functionMeans[count]);
+                functionProportions[count] = getProportion(finalRow, function);
+
+                toConvergenceFile(averagedConvData, function, t);
+                System.out.println("Finished "+function+" "+t);
+                count++;
+            }
+            toMeanDevFile(functionMeans,functionDeviations, functionProportions, t);
         }
-        toMeanDevFile(functionMeans,functionDeviations, functionProportions);
     }
 
-    private static void toDataFile(double[] results, String function) {
+    private static void toDataFile(Double[] results, int function, String test) {
         try {
-            BufferedWriter br = new BufferedWriter(new FileWriter("Results "+function+".csv"));
+            BufferedWriter br = new BufferedWriter(new FileWriter(test+"_Results_"+function+".csv"));
             StringBuilder sb = new StringBuilder();
             for(double r:results) {
                 sb.append(r);
@@ -63,32 +79,32 @@ public class PSOMain implements Constants{
         catch (Exception e) {}
     }
 
-    private static void toMeanDevFile(double[] means, double[] devs, double[] proportions) {
+    private static void toMeanDevFile(Double[] means, Double[] devs, Double[] proportions, String test) {
         try {
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
-            BufferedWriter br = new BufferedWriter(new FileWriter("MeanDevs_"+sdf.format(date)+".csv"));
+            BufferedWriter br = new BufferedWriter(new FileWriter(test+" MeanDevs_"+sdf.format(date)+".csv"));
             StringBuilder sb = new StringBuilder();
-            for(String s : functions) {
+            for(int s : functions) {
                 sb.append(s);
-                if(s.equals("Griewank(10D)")) {
+                if(s == 32) {
                     sb.append(",\n");
                 }
                 else {
                     sb.append(", ");
                 }
             }
-            for(double m:means) {
+            for(Double m:means) {
                 sb.append(m);
                 sb.append(", ");
             }
             sb.append("\n");
-            for(double d:devs) {
+            for(Double d:devs) {
                 sb.append(d);
                 sb.append(", ");
             }
             sb.append("\n");
-            for(double p:proportions) {
+            for(Double p:proportions) {
                 sb.append(p);
                 sb.append(", ");
             }
@@ -100,11 +116,11 @@ public class PSOMain implements Constants{
         }
     }
 
-    private static void toConvergenceFile(double[] averagedConvData, String function) {
+    private static void toConvergenceFile(Double[] averagedConvData, int function, String test) {
         try {
-            BufferedWriter br = new BufferedWriter(new FileWriter(function+"Convergence_Mean.csv"));
+            BufferedWriter br = new BufferedWriter(new FileWriter(test+"_Convergence_"+function+".csv"));
             StringBuilder sb = new StringBuilder();
-            for(double d:averagedConvData) {
+            for(Double d:averagedConvData) {
                 sb.append(d);
                 sb.append(",\n");
             }
@@ -115,41 +131,91 @@ public class PSOMain implements Constants{
         }
     }
 
-    private static double getAverage(double[] arr) {
-        double sum =0.0;
-        for(double d : arr) sum += d;
-        return sum / (double) arr.length;
+    private static Double getAverage(Double[] arr) {
+        Double sum =0.0;
+        for(Double d : arr) sum += d;
+        return sum / arr.length;
     }
 
-    private static double getStdDev(double[] data, double mean)
+    private static Double getStdDev(Double[] data, Double mean)
     {
-        double temp = 0;
-        for(double a :data)
+        Double temp = 0.0;
+        for(Double a :data)
             temp += (mean-a)*(mean-a);
-        return Math.sqrt(temp/(double)data.length);
+        return Math.sqrt(temp/data.length);
     }
 
-    private static double getProportion(double[] data, String function) {
+    private static Double getProportion(Double[] data, int function) {
         double goal;
         double numCorrect = 0.0;
         switch (function) {
-            case "Sphere": goal = 0.01;
+            case 1: goal = 0.01;
                 break;
-            case "Rosenbrock": goal = 100;
+            case 2: goal = 100;
                 break;
-            case "Ackley": goal = 0.01;
+            case 3: goal = 0.01;
                 break;
-            case "Griewank": goal = 0.05;
+            case 4: goal = 0.05;
                 break;
-            case "Rastrigin": goal = 100;
+            case 5: goal = 100;
                 break;
-            case "Schaffer(2D)": goal = 0.00001;
+            case 6: goal = 0.00001;
                 break;
-            case "Griewank(10D)": goal = 0.05;
+            case 7: goal = 0.05;
+                break;
+            case 8: goal = (-450.0 + 0.000001);
+                break;
+            case 9: goal = (-450.0 + 0.000001);
+                break;
+            case 10: goal = (-450.0 + 0.000001);
+                break;
+            case 11: goal = (-450.0 + 0.000001);
+                break;
+            case 12: goal = (-310.0 + 0.000001);
+                break;
+            case 13: goal = (390.0 + 0.01);
+                break;
+            case 14: goal = (-180.0 + 0.01);
+                break;
+            case 15: goal = (-140.0 + 0.01);
+                break;
+            case 16: goal = (-330.0 + 0.01);
+                break;
+            case 17: goal = (-330.0 + 0.01);
+                break;
+            case 18: goal = (90.0 + 0.01);
+                break;
+            case 19: goal = (-460.0 + 0.01);
+                break;
+            case 20: goal = (-130.0 + 0.01);
+                break;
+            case 21: goal = (-300.0 + 0.01);
+                break;
+            case 22: goal = (120.0 + 0.01);
+                break;
+            case 23: goal = (120.0 + 0.01);
+                break;
+            case 24: goal = (120.0 + 0.1);
+                break;
+            case 25: goal = (10.0 + 0.1);
+                break;
+            case 26: goal = (10.0 + 0.1);
+                break;
+            case 27: goal = (10.0 + 0.1);
+                break;
+            case 28: goal = (360.0 + 0.1);
+                break;
+            case 29: goal = (360.0 + 0.1);
+                break;
+            case 30: goal = (360.0 + 0.1);
+                break;
+            case 31: goal = (260.0 + 0.1);
+                break;
+            case 32: goal = (260.0 + 0.1);
                 break;
             default: goal = 0.0;
         }
-        for(double d:data) {
+        for(Double d:data) {
             if(d <= goal) {
                 numCorrect++;
             }

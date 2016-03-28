@@ -1,20 +1,22 @@
+import java.util.ArrayList;
+
 public class gBestPSO extends PSOProcess {
 
-    public gBestPSO(String function) {
+    public gBestPSO(int function) {
+        swarm = new ArrayList<>();
         fitnessFunction = new Functions(function);
-        bestPositions = new double[finalSwarmSize][fitnessFunction.dimensions];
-        secondBestPositions = new double[finalSwarmSize][fitnessFunction.dimensions];
-        thirdBestPositions = new double[finalSwarmSize][fitnessFunction.dimensions];
-        globalBests = new double[finalSwarmSize][fitnessFunction.dimensions];
+        fitFunc = new Functions_K(fitnessFunction.activeFunction, fitnessFunction.dimensions,
+                fitnessFunction.upperBound, fitnessFunction.lowerBound);
     }
 
     @Override
-    public double[] findLocalGBest(int particleNumber, int currentSwarmSize) {
-        for(int i=0; i<currentSwarmSize; i++)
+    public Double[] findLocalGBest(int particleNumber, int currentSwarmSize) {
+        Double[] bestFitnesses = new Double[currentSwarmSize];
+        for(int i=0; i<bestFitnesses.length; i++)
         {
-            bestFitnesses[i] = evaluateFit(bestPositions[i]);
+            bestFitnesses[i] = evaluateFit(swarm.get(i).getBestPosition());
         }
         localBestIndex = getMinPos(bestFitnesses, currentSwarmSize);
-        return bestPositions[localBestIndex];
+        return swarm.get(localBestIndex).getBestPosition();
     }
 }
