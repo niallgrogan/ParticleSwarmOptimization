@@ -8,13 +8,8 @@ public class PSOMain implements Constants{
     private static int numRuns = 25;
     public static void main(String[] Args)
     {
-        runStandardTests();
-    }
-
-    private static void runStandardTests() {
-
-        String[] tests = {"lBest"};//{"gBest","lBest","vonNeu"};
-        for(String t:tests) {
+        String[] topologies = {"lBest"};//{"gBest","lBest","vonNeu"};
+        for(String t:topologies) {
             Double[] functionMeans = new Double[functions.length];
             Double[] functionDeviations = new Double[functions.length];
             Double[] functionProportions = new Double[functions.length];
@@ -49,11 +44,11 @@ public class PSOMain implements Constants{
                     for(int k=0; k<numRuns; k++) {
                         oneRowData[k] = results[k][i];
                     }
-                    averagedConvData[i] = getAverage(oneRowData);
+                    averagedConvData[i] = getMean(oneRowData);
                     finalRow = oneRowData;
                 }
                 toDataFile(finalRow, function, t);
-                functionMeans[count] = getAverage(finalRow);
+                functionMeans[count] = getMean(finalRow);
                 functionDeviations[count] = getStdDev(finalRow, functionMeans[count]);
                 functionProportions[count] = getProportion(finalRow, function);
 
@@ -65,7 +60,7 @@ public class PSOMain implements Constants{
         }
     }
 
-    private static void toDataFile(Double[] results, int function, String test) {
+    public static void toDataFile(Double[] results, int function, String test) {
         try {
             BufferedWriter br = new BufferedWriter(new FileWriter(test+"_Results_"+function+".csv"));
             StringBuilder sb = new StringBuilder();
@@ -79,7 +74,7 @@ public class PSOMain implements Constants{
         catch (Exception e) {}
     }
 
-    private static void toMeanDevFile(Double[] means, Double[] devs, Double[] proportions, String test) {
+    public static void toMeanDevFile(Double[] means, Double[] devs, Double[] proportions, String test) {
         try {
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
@@ -116,7 +111,7 @@ public class PSOMain implements Constants{
         }
     }
 
-    private static void toConvergenceFile(Double[] averagedConvData, int function, String test) {
+    public static void toConvergenceFile(Double[] averagedConvData, int function, String test) {
         try {
             BufferedWriter br = new BufferedWriter(new FileWriter(test+"_Convergence_"+function+".csv"));
             StringBuilder sb = new StringBuilder();
@@ -131,13 +126,13 @@ public class PSOMain implements Constants{
         }
     }
 
-    private static Double getAverage(Double[] arr) {
+    public static Double getMean(Double[] arr) {
         Double sum =0.0;
         for(Double d : arr) sum += d;
         return sum / arr.length;
     }
 
-    private static Double getStdDev(Double[] data, Double mean)
+    public static Double getStdDev(Double[] data, Double mean)
     {
         Double temp = 0.0;
         for(Double a :data)
@@ -145,7 +140,7 @@ public class PSOMain implements Constants{
         return Math.sqrt(temp/data.length);
     }
 
-    private static Double getProportion(Double[] data, int function) {
+    public static Double getProportion(Double[] data, int function) {
         double goal;
         double numCorrect = 0.0;
         switch (function) {
